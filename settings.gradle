@@ -14,3 +14,9 @@ dependencyResolutionManagement {
 }
 rootProject.name = "Chatify"
 include ':app'
+include ':network'
+include ':local'
+include ':repository'
+include ':viewmodel'
+include ':ui'
+include ':entities'
