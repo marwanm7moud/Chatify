@@ -47,7 +47,7 @@ android {
 }
 
 dependencies {
-
+    implementation project(":network")
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
     implementation 'androidx.activity:activity-compose:1.5.1'
@@ -63,4 +63,20 @@ dependencies {
     androidTestImplementation 'androidx.compose.ui:ui-test-junit4'
     debugImplementation 'androidx.compose.ui:ui-tooling'
     debugImplementation 'androidx.compose.ui:ui-test-manifest'
+
+    implementation (DependencyProject.androidxCore)
+    implementation (DependencyProject.lifecycle)
+    implementation (DependencyProject.activity)
+    implementation platform(DependencyProject.bom)
+    implementation (DependencyProject.ui)
+    implementation (DependencyProject.ui_graphics)
+    implementation (DependencyProject.preview)
+    implementation (DependencyProject.material)
+    testImplementation (DependencyProject.junit)
+    androidTestImplementation (DependencyProject.test)
+    androidTestImplementation (DependencyProject.espresso)
+    androidTestImplementation platform(DependencyProject.bom)
+    androidTestImplementation platform(DependencyProject.ui_test)
+    debugImplementation (DependencyProject.ui_tooling)
+    debugImplementation (DependencyProject.test_manifest)
 }

@@ -1,1 +1,1 @@
-C:\Users\hp\AndroidStudioProjects\Chatify\buildSrc\build\classes\kotlin\main\com\awesome\buildsrc\MyClass.class
+C:\Users\hp\AndroidStudioProjects\Chatify\buildSrc\build\classes\kotlin\main\DependencyProject.class;C:\Users\hp\AndroidStudioProjects\Chatify\buildSrc\build\classes\kotlin\main\Modules.class;C:\Users\hp\AndroidStudioProjects\Chatify\buildSrc\build\classes\kotlin\main\Versions.class
