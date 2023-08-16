@@ -5,11 +5,11 @@ plugins {
 
 android {
     namespace 'com.awesome.viewmodel'
-    compileSdk 33
+    compileSdk Configurations.COMPILE_SDK
 
     defaultConfig {
-        minSdk 24
-        targetSdk 33
+        minSdk Configurations.MIN_SDK
+        targetSdk Configurations.TARGET_SDK
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -22,20 +22,21 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
+        sourceCompatibility Configurations.JAVA_VERSION
+        targetCompatibility Configurations.JAVA_VERSION
     }
     kotlinOptions {
-        jvmTarget = '1.8'
+        jvmTarget = Configurations.JVM_TARGET
     }
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.6.1'
-    implementation 'com.google.android.material:material:1.9.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.5'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
+    implementation (DependencyProject.androidxCore)
+    implementation (DependencyProject.appcompat)
+    implementation (DependencyProject.material)
+    implementation (DependencyProject.appcompat)
+    implementation (DependencyProject.material)
+    testImplementation (DependencyProject.junit)
+    androidTestImplementation (DependencyProject.test)
+    androidTestImplementation (DependencyProject.espresso)
 }
