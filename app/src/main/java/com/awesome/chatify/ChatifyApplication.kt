@@ -23,5 +23,6 @@ class ChatifyApplication : Application() {
             BuildConfig.AUTHORIZATION_SECRET
         )
         QBSettings.getInstance().setAccountKey(BuildConfig.ACCOUNT_KEY)
+        QBSettings.getInstance().setAutoCreateSession(true)
     }
 }

@@ -33,9 +33,7 @@ android {
 dependencies {
     implementation (DependencyProject.androidxCore)
     implementation (DependencyProject.appcompat)
-    implementation (DependencyProject.material)
     implementation (DependencyProject.appcompat)
-    implementation (DependencyProject.material)
     testImplementation (DependencyProject.junit)
     androidTestImplementation (DependencyProject.test)
     androidTestImplementation (DependencyProject.espresso)
