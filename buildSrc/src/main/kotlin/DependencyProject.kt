@@ -30,4 +30,14 @@ object DependencyProject {
 
     const val hilt = "com.google.dagger:hilt-android:${Versions.HILT_VERSION}"
     const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.HILT_VERSION}"
+
+    @JvmField
+    val quickBloxSdk = listOf(
+        "com.quickblox:quickblox-android-sdk-messages:4.1.1",
+        "com.quickblox:quickblox-android-sdk-chat:4.1.1",
+        "com.quickblox:quickblox-android-sdk-content:4.1.1",
+        "com.quickblox:quickblox-android-sdk-videochat-webrtc:4.1.1",
+        "com.quickblox:quickblox-android-sdk-conference:4.1.1",
+        "com.quickblox:quickblox-android-sdk-customobjects:4.1.1"
+    )
 }
