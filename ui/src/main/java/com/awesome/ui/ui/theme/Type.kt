@@ -1,4 +1,4 @@
-package com.awesome.chatify.ui.theme
+package com.awesome.ui.ui.theme
 
 import androidx.compose.material3.Typography
 import androidx.compose.ui.text.TextStyle
