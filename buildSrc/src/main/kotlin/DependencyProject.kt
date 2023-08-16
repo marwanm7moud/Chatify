@@ -8,12 +8,13 @@ object Versions {
     const val LIFECYCLE_VERSION = "2.3.1"
     const val ACTIVITY_VERSION = "1.5.1"
     const val BOM_VERSION = "2022.10.00"
+    const val HILT_VERSION = "2.44"
 }
 
 object DependencyProject {
     const val androidxCore = "androidx.core:core-ktx:${Versions.CORE_VERSION}"
     const val appcompat = "androidx.appcompat:appcompat:${Versions.APPCOMPAT_VERSION}"
-    const val material = "com.google.android.material:material:${Versions.Material_VERSION}"
+    const val material = "androidx.compose.material3:material3"
     const val junit = "junit:junit:${Versions.JUNIT_VERSION}"
     const val test = "androidx.test.ext:junit:${Versions.TEST_JUNIT_VERSION}"
     const val espresso = "androidx.test.espresso:espresso-core:${Versions.ESPRESSO_VERSION}"
@@ -26,4 +27,7 @@ object DependencyProject {
     const val ui_test = "androidx.compose.ui:ui-test-junit4"
     const val ui_tooling = "androidx.compose.ui:ui-tooling"
     const val test_manifest = "androidx.compose.ui:ui-test-manifest"
+
+    const val hilt = "com.google.dagger:hilt-android:${Versions.HILT_VERSION}"
+    const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.HILT_VERSION}"
 }
