@@ -4,9 +4,11 @@ import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.viewmodel.BaseViewModel
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import javax.inject.Inject
 
+@HiltViewModel
 class LoginViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : BaseViewModel<LoginUiState, LoginEvents>(LoginUiState()), LoginInteractions {
@@ -28,6 +30,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLoginError(e: Throwable) {
+        _state.update { it.copy(isLoading = false) }
         when (e) {
             is UnauthorizedException -> _state.update { it.copy(usernamePlaceHolder = e.message) }
             else -> sendEvent(
@@ -39,6 +42,7 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLoginSuccess(userEntity: UserEntity) {
+        _state.update { it.copy(isLoading = false) }
         sendEvent(LoginEvents.NavigateToHomeScreen)
     }
 
