@@ -16,19 +16,19 @@ import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
+open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     protected val _state by lazy { MutableStateFlow<STATE>(state) }
     val state = _state.asStateFlow()
 
     protected val _event = MutableSharedFlow<EVENT>()
     val event = _event.asSharedFlow()
 
-    fun <T> tryToExecute(
+    protected fun <T> tryToExecute(
         call: suspend () -> T,
         onSuccess: (T) -> Unit,
-        onError: (Throwable) -> Unit,
+        onError: (e:Throwable) -> Unit,
     ) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
             try {
                 call().also(onSuccess)
             } catch (e: ValidationException) {
@@ -47,7 +47,7 @@ class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
         }
     }
 
-    fun sendEvent(event: EVENT) {
-        viewModelScope.launch(Dispatchers.IO) { _event.emit(event) }
+    protected fun sendEvent(event: EVENT) {
+        viewModelScope.launch { _event.emit(event) }
     }
 }
