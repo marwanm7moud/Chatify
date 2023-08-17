@@ -1,4 +1,4 @@
-package com.awesome.repository.utils
+package com.awesome.entities.utils
 
 open class ChatifyException(message : String?) : Throwable(message)
 

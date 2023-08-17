@@ -1,4 +1,4 @@
-package com.awesome.repository.utils
+package com.awesome.entities.utils
 
 enum class HttpStatusCode(val code : Int) {
     NoInternet(0),

@@ -31,6 +31,7 @@ android {
 }
 
 dependencies {
+    implementation project(Modules.ENTITY_MODULE)
     implementation (DependencyProject.androidxCore)
     implementation (DependencyProject.appcompat)
     implementation (DependencyProject.material)

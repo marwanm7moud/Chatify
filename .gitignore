@@ -26,3 +26,4 @@ local.properties
 /buildSrc/build/classes/kotlin/main/Configurations.class
 /buildSrc/build/kotlin/compileKotlin/cacheable/caches-jvm/jvm/kotlin/constants.tab.len
 /buildSrc/build/classes/kotlin/main/DependencyProject.class
+/.idea/inspectionProfiles/Project_Default.xml

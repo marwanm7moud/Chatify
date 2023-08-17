@@ -4,12 +4,12 @@ import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.network.auth.AuthService
 import com.awesome.repository.RemoteDataSource
 import com.awesome.repository.response.UserDto
-import com.awesome.repository.utils.HttpStatusCode
-import com.awesome.repository.utils.NetworkException
-import com.awesome.repository.utils.NullDataException
-import com.awesome.repository.utils.ServerException
-import com.awesome.repository.utils.UnauthorizedException
-import com.awesome.repository.utils.ValidationException
+import com.awesome.entities.utils.HttpStatusCode
+import com.awesome.entities.utils.NetworkException
+import com.awesome.entities.utils.NullDataException
+import com.awesome.entities.utils.ServerException
+import com.awesome.entities.utils.UnauthorizedException
+import com.awesome.entities.utils.ValidationException
 import com.quickblox.core.exception.QBResponseException
 import javax.inject.Inject
 
