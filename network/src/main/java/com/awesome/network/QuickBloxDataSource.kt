@@ -1,9 +1,9 @@
 package com.awesome.network
 
+import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.network.auth.AuthService
 import com.awesome.repository.RemoteDataSource
-import com.awesome.repository.model.request.UserSignUpRequest
-import com.awesome.repository.model.response.UserDto
+import com.awesome.repository.response.UserDto
 import com.awesome.repository.utils.HttpStatusCode
 import com.awesome.repository.utils.NetworkException
 import com.awesome.repository.utils.NullDataException

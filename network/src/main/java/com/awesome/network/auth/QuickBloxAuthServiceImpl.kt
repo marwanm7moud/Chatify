@@ -1,20 +1,13 @@
 package com.awesome.network.auth
 
 import android.os.Bundle
-import android.util.Log
 import com.awesome.network.toUserDto
-import com.awesome.repository.model.request.UserSignUpRequest
-import com.awesome.repository.model.response.UserDto
-import com.quickblox.auth.session.QBSession
-import com.quickblox.auth.session.QBSessionManager
-import com.quickblox.auth.session.QBSessionParameters
-import com.quickblox.chat.QBChatService
+import com.awesome.entities.repos.model.UserSignUpRequest
+import com.awesome.repository.response.UserDto
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
 import com.quickblox.users.QBUsers
 import com.quickblox.users.model.QBUser
-import org.jivesoftware.smack.ConnectionListener
-import org.jivesoftware.smack.XMPPConnection
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -22,7 +15,7 @@ import kotlin.coroutines.suspendCoroutine
 
 
 class QuickBloxAuthServiceImpl @Inject constructor() : AuthService {
-    override suspend fun signUp(userSignUpRequest: UserSignUpRequest): UserDto {
+    override suspend fun signUp(userSignUpRequest: com.awesome.entities.repos.model.UserSignUpRequest): UserDto {
         val user = QBUser()
         user.email = userSignUpRequest.email
         user.password = userSignUpRequest.password

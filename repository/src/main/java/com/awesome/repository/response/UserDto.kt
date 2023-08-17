@@ -1,8 +1,9 @@
-package com.awesome.repository.model.response
+package com.awesome.repository.response
 
 import java.util.Date
 
 data class UserDto(
+    val id:Int?=null,
     var fullName: String? = null,
     val email: String? = null,
     val login: String? = null,

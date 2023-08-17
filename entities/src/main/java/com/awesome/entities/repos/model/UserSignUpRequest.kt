@@ -1,4 +1,4 @@
-package com.awesome.repository.model.request
+package com.awesome.entities.repos.model
 
 data class UserSignUpRequest(
     val fullName:String,

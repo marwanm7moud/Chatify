@@ -51,6 +51,7 @@ android {
 
 dependencies {
     implementation project(Modules.REPOSITORY_MODULE)
+    implementation project(Modules.ENTITY_MODULE)
 
     implementation (DependencyProject.androidxCore)
     implementation (DependencyProject.appcompat)

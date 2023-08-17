@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id("kotlin-kapt")
 }
 
 android {
@@ -31,10 +32,15 @@ android {
 }
 
 dependencies {
+    implementation project(Modules.ENTITY_MODULE)
+
     implementation (DependencyProject.androidxCore)
     implementation (DependencyProject.appcompat)
     implementation (DependencyProject.appcompat)
     testImplementation (DependencyProject.junit)
     androidTestImplementation (DependencyProject.test)
     androidTestImplementation (DependencyProject.espresso)
+    //hilt
+    implementation(DependencyProject.hilt)
+    kapt(DependencyProject.hilt_compiler)
 }

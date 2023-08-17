@@ -1,17 +1,17 @@
-package com.awesome.repository
+package com.awesome.entities.repos
 
+import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.model.UserSignUpRequest
-import com.awesome.repository.response.UserDto
 
-interface RemoteDataSource {
+interface AuthRepository {
     suspend fun signUp(
         userSignUpRequest: UserSignUpRequest
-    ) : UserDto
+    ) : UserEntity
 
     suspend fun login(
         username:String,
-        password:String
-    ) : UserDto
+        passwrod:String
+    ) : UserEntity
 
     suspend fun logout():Boolean
 }

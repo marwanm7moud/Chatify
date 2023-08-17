@@ -1,9 +1,10 @@
 package com.awesome.network
 
-import com.awesome.repository.model.response.UserDto
+import com.awesome.repository.response.UserDto
 import com.quickblox.users.model.QBUser
 
 fun QBUser.toUserDto() = UserDto(
+    id = id,
     fullName = fullName,
     email = email,
     login = login,
