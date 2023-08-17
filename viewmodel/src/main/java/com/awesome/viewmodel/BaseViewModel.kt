@@ -1,0 +1,38 @@
+package com.awesome.viewmodel
+
+import android.util.Log
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.launch
+
+class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
+    protected val _state by lazy { MutableStateFlow<STATE>(state) }
+    val state = _state.asStateFlow()
+
+    protected val _event = MutableSharedFlow<EVENT>()
+    val event = _event.asSharedFlow()
+
+    fun <T> tryToExcute(
+        call: suspend () -> T,
+        onSuccess: (T) -> Unit,
+        onError: (Throwable) -> Unit,
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            try {
+                call().also(onSuccess)
+            } catch (e: Throwable) {
+                onError(e)
+            }
+        }
+    }
+
+    fun sendEvent(event: EVENT) {
+        viewModelScope.launch(Dispatchers.IO) { _event.emit(event) }
+    }
+}
