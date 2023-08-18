@@ -1,25 +1,44 @@
 plugins {
     id 'com.android.library'
     id 'org.jetbrains.kotlin.android'
+    id("kotlin-kapt")
 }
 
 android {
     namespace 'com.awesome.network'
     compileSdk Configurations.COMPILE_SDK
 
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
+
     defaultConfig {
         minSdk Configurations.MIN_SDK
         targetSdk Configurations.TARGET_SDK
 
+        buildConfigField "String", "APPLICATION_ID",localProperties['application_id']
+        buildConfigField "String", "AUTHORIZATION_KEY",localProperties['authorization_key']
+        buildConfigField "String", "AUTHORIZATION_SECRET",localProperties['authorization_secret']
+        buildConfigField "String", "ACCOUNT_KEY",localProperties['account_key']
+        buildConfigField "String", "API_KEY",localProperties['api_key']
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
 
+
     buildTypes {
+        debug{
+            buildConfigField "String" , "API_KEY" , "\" \""
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
+    }
+    buildFeatures {
+        buildConfig true
     }
     compileOptions {
         sourceCompatibility Configurations.JAVA_VERSION
@@ -31,12 +50,20 @@ android {
 }
 
 dependencies {
+    implementation project(Modules.REPOSITORY_MODULE)
+    implementation project(Modules.ENTITY_MODULE)
+
     implementation (DependencyProject.androidxCore)
     implementation (DependencyProject.appcompat)
-    implementation (DependencyProject.material)
     implementation (DependencyProject.appcompat)
-    implementation (DependencyProject.material)
     testImplementation (DependencyProject.junit)
     androidTestImplementation (DependencyProject.test)
     androidTestImplementation (DependencyProject.espresso)
+
+    DependencyProject.quickBloxSdk.forEach(dep->
+        implementation(dep)
+    )
+    //hilt
+    implementation(DependencyProject.hilt)
+    kapt(DependencyProject.hilt_compiler)
 }

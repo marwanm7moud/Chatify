@@ -1,11 +1,16 @@
 plugins {
     id 'com.android.application'
     id 'org.jetbrains.kotlin.android'
+    id("kotlin-kapt")
+    id("com.google.dagger.hilt.android")
 }
 
 android {
     namespace 'com.awesome.chatify'
     compileSdk Configurations.COMPILE_SDK
+
+    def localProperties = new Properties()
+    localProperties.load(new FileInputStream(rootProject.file("local.properties")))
 
     defaultConfig {
         applicationId "com.awesome.chatify"
@@ -13,6 +18,12 @@ android {
         targetSdk Configurations.TARGET_SDK
         versionCode Configurations.VERSION_CODE
         versionName Configurations.VERSION_NAME
+
+        buildConfigField "String", "APPLICATION_ID",localProperties['application_id']
+        buildConfigField "String", "AUTHORIZATION_KEY",localProperties['authorization_key']
+        buildConfigField "String", "AUTHORIZATION_SECRET",localProperties['authorization_secret']
+        buildConfigField "String", "ACCOUNT_KEY",localProperties['account_key']
+        buildConfigField "String", "API_KEY",localProperties['api_key']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -35,6 +46,7 @@ android {
     }
     buildFeatures {
         compose true
+        buildConfig true
     }
     composeOptions {
         kotlinCompilerExtensionVersion Configurations.KOTLIN_COMPILER
@@ -70,4 +82,12 @@ dependencies {
     androidTestImplementation platform(DependencyProject.ui_test)
     debugImplementation (DependencyProject.ui_tooling)
     debugImplementation (DependencyProject.test_manifest)
+
+    //hilt
+    implementation(DependencyProject.hilt)
+    kapt(DependencyProject.hilt_compiler)
+
+    DependencyProject.quickBloxSdk.forEach(dep->
+            implementation(dep)
+    )
 }
