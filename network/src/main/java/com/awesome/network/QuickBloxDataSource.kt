@@ -38,7 +38,7 @@ class QuickBloxDataSource @Inject constructor(
                 HttpStatusCode.Unauthorized.code -> throw UnauthorizedException(e.errors.toString())
                 HttpStatusCode.Forbidden.code -> throw NetworkException(e.errors.toString())
                 HttpStatusCode.NotFound.code -> throw NetworkException(e.errors.toString())
-                HttpStatusCode.Validation.code -> throw ValidationException(e.errors.toString())
+                HttpStatusCode.Validation.code -> throw ValidationException(e.errors)
                 HttpStatusCode.TooManyRequests.code -> throw NetworkException(e.errors.toString())
                 HttpStatusCode.InternalServerError.code -> throw ServerException(e.errors.toString())
                 HttpStatusCode.ServiceUnavailable.code -> throw ServerException(e.errors.toString())

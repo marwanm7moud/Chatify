@@ -1,9 +1,12 @@
 package com.awesome.viewmodel.signUpScreen
 
+import android.util.Log
+import androidx.compose.ui.text.toLowerCase
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.entities.utils.UnauthorizedException
+import com.awesome.entities.utils.ValidationException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -14,19 +17,19 @@ class SignUpViewModel @Inject constructor(
     private val authRepository: AuthRepository
 ) : BaseViewModel<SignUpUiState, SignUpEvents>(SignUpUiState()), SignUpInteractions {
     override fun onUsernameChange(username: String) {
-        _state.update { it.copy(username = username) }
+        _state.update { it.copy(username = username , usernamePlaceHolder = null) }
     }
 
     override fun onPasswordChange(password: String) {
-        _state.update { it.copy(password = password) }
+        _state.update { it.copy(password = password , passwordPlaceHolder = null) }
     }
 
     override fun onEmailChange(email: String) {
-        _state.update { it.copy(email = email) }
+        _state.update { it.copy(email = email , emailPlaceHolder = null) }
     }
 
     override fun onFullNameChange(fullName: String) {
-        _state.update { it.copy(fullName = fullName) }
+        _state.update { it.copy(fullName = fullName , fullNamePlaceHolder = null) }
     }
 
     override fun onCLickSignUp() {
@@ -47,7 +50,24 @@ class SignUpViewModel @Inject constructor(
     private fun onSignUpError(e: Throwable) {
         _state.update { it.copy(isLoading = false) }
         when (e) {
-            is UnauthorizedException -> _state.update { it.copy(usernamePlaceHolder = e.message) }
+            is ValidationException -> {
+                e.messages?.forEach { errorMessage ->
+                    if (errorMessage.lowercase().contains("password"))
+                        _state.update { it.copy(passwordPlaceHolder = errorMessage) }
+                    if (errorMessage.lowercase().contains("login") ||
+                        errorMessage.lowercase().contains("username")
+                    )
+                        _state.update { it.copy(usernamePlaceHolder = errorMessage) }
+                    if (errorMessage.lowercase().contains("email"))
+                        _state.update {
+                            it.copy(emailPlaceHolder = errorMessage)
+                        }
+                    if (errorMessage.lowercase().contains("fullname"))
+                        _state.update {
+                            it.copy(fullNamePlaceHolder = errorMessage)
+                        }
+                }
+            }
             else -> sendEvent(
                 SignUpEvents.ShowToastForUnexpectedError(
                     e.message ?: "UnExpectedError"

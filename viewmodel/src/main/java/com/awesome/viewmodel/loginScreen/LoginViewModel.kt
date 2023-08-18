@@ -3,6 +3,7 @@ package com.awesome.viewmodel.loginScreen
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.utils.UnauthorizedException
+import com.awesome.entities.utils.ValidationException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -33,6 +34,17 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(isLoading = false) }
         when (e) {
             is UnauthorizedException -> _state.update { it.copy(usernamePlaceHolder = e.message) }
+            is ValidationException -> {
+                e.messages?.forEach { errorMessage ->
+                    if (errorMessage.lowercase().contains("password"))
+                        _state.update { it.copy(passwordPlaceHolder = errorMessage) }
+                    if (errorMessage.lowercase().contains("login") ||
+                        errorMessage.lowercase().contains("username")
+                    )
+                        _state.update { it.copy(usernamePlaceHolder = errorMessage) }
+                }
+            }
+
             else -> sendEvent(
                 LoginEvents.ShowToastForUnexpectedError(
                     e.message ?: "UnExpectedError"
@@ -45,5 +57,4 @@ class LoginViewModel @Inject constructor(
         _state.update { it.copy(isLoading = false) }
         sendEvent(LoginEvents.NavigateToHomeScreen)
     }
-
 }

@@ -1,6 +1,5 @@
 package com.awesome.ui.screens.login
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -40,6 +39,7 @@ fun LoginScreen(
         username = state.username,
         usernamePlaceHolder = state.usernamePlaceHolder,
         password = state.password,
+        passwordPlaceHolder = state.passwordPlaceHolder,
         onUsernameChanged = loginViewModel::onUsernameChange,
         onPasswordChanged = loginViewModel::onPasswordChange,
         onLoginClicked = loginViewModel::onCLickLogin,
@@ -54,11 +54,12 @@ fun LoginContent(
     username: String,
     usernamePlaceHolder: String?,
     password: String,
+    passwordPlaceHolder: String?,
     onUsernameChanged: (String) -> Unit,
     onPasswordChanged: (String) -> Unit,
     onLoginClicked: () -> Unit,
     isLoading: Boolean,
-    onNavigateToSignUp: () -> Unit
+    onNavigateToSignUp: () -> Unit,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TextField(
@@ -73,7 +74,13 @@ fun LoginContent(
         )
         TextField(
             value = password,
-            onValueChange = onPasswordChanged
+            onValueChange = onPasswordChanged,
+            isError = passwordPlaceHolder!=null,
+            supportingText = {
+                if (passwordPlaceHolder != null) {
+                    Text(text = passwordPlaceHolder)
+                }
+            }
         )
         Button(onClick = onLoginClicked) {
             if (isLoading)
