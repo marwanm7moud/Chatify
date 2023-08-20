@@ -70,4 +70,5 @@ dependencies {
     implementation(DependencyProject.hilt)
     kapt(DependencyProject.hilt_compiler)
     implementation(DependencyProject.hilt_compose)
+    implementation(DependencyProject.navigation)
 }

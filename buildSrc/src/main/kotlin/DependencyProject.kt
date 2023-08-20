@@ -10,6 +10,7 @@ object Versions {
     const val BOM_VERSION = "2022.10.00"
     const val HILT_VERSION = "2.44"
     const val HILT_COMPOSE_VERSION = "1.0.0"
+    const val NAVIGATION_VERSION = "2.5.3"
 }
 
 object DependencyProject {
@@ -32,6 +33,7 @@ object DependencyProject {
     const val hilt = "com.google.dagger:hilt-android:${Versions.HILT_VERSION}"
     const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.HILT_VERSION}"
     const val hilt_compose = "androidx.hilt:hilt-navigation-compose:${Versions.HILT_COMPOSE_VERSION}"
+    const val navigation = "androidx.navigation:navigation-compose:${Versions.NAVIGATION_VERSION}"
     @JvmField
     val quickBloxSdk = listOf(
         "com.quickblox:quickblox-android-sdk-messages:4.1.1",

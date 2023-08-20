@@ -1,5 +1,6 @@
 package com.awesome.ui.screens.login
 
+import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -14,6 +15,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.awesome.ui.screens.signup.navigateToSignUp
 import com.awesome.ui.ui.theme.ChatifyTheme
 import com.awesome.viewmodel.loginScreen.LoginEvents
 import com.awesome.viewmodel.loginScreen.LoginViewModel
@@ -22,11 +26,13 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun LoginScreen(
-    loginViewModel: LoginViewModel = hiltViewModel()
-) {
+    navController: NavController,
+    loginViewModel: LoginViewModel = hiltViewModel(),
+    ) {
     val state by loginViewModel.state.collectAsState()
     LaunchedEffect(key1 = loginViewModel.event) {
         loginViewModel.event.collectLatest {
+            Log.e("TAG", "LoginScreen: ${it}", )
             when (it) {
                 LoginEvents.NavigateToHomeScreen -> TODO()
                 LoginEvents.NavigateToSignUpScreen -> TODO()
@@ -44,7 +50,7 @@ fun LoginScreen(
         onPasswordChanged = loginViewModel::onPasswordChange,
         onLoginClicked = loginViewModel::onCLickLogin,
         isLoading = state.isLoading,
-        onNavigateToSignUp = { TODO() }
+        onNavigateToSignUp = { navController.navigateToSignUp()}
     )
 }
 
@@ -103,7 +109,8 @@ fun LoginContent(
 
 @Composable
 fun LoginScreenPreview() {
+    val navController = rememberNavController()
     ChatifyTheme {
-        LoginScreen()
+        LoginScreen(navController)
     }
 }

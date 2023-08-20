@@ -15,6 +15,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
+import com.awesome.ui.screens.login.navigateToLogin
 import com.awesome.ui.ui.theme.ChatifyTheme
 import com.awesome.viewmodel.signUpScreen.SignUpEvents
 import com.awesome.viewmodel.signUpScreen.SignUpViewModel
@@ -23,6 +26,7 @@ import kotlinx.coroutines.flow.collectLatest
 
 @Composable
 fun SignUpScreen(
+    navController: NavController,
     signUpViewModel: SignUpViewModel = hiltViewModel()
 ) {
     val state by signUpViewModel.state.collectAsState()
@@ -51,7 +55,7 @@ fun SignUpScreen(
         onFullNameChanged = signUpViewModel::onFullNameChange,
         onSignUpClicked = signUpViewModel::onCLickSignUp,
         isLoading = state.isLoading,
-        onNavigateToLogin = { TODO() }
+        onNavigateToLogin = { navController.navigateToLogin() }
     )
 }
 
@@ -141,7 +145,8 @@ fun SignUpContent(
 @Composable
 @Preview(showSystemUi = true)
 fun SignUpScreenPreview() {
+    val navController = rememberNavController()
     ChatifyTheme {
-        SignUpScreen()
+        SignUpScreen(navController)
     }
 }
