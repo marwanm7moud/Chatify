@@ -6,4 +6,6 @@ interface SignUpInteractions {
     fun onEmailChange(email:String)
     fun onFullNameChange(fullName:String)
     fun onCLickSignUp()
+    fun onNavigateToLogin()
+
 }

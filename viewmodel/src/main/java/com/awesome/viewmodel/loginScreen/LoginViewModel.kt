@@ -30,6 +30,10 @@ class LoginViewModel @Inject constructor(
         )
     }
 
+    override fun onNavigateToSignUp() {
+        sendEvent(LoginEvents.NavigateToSignUpScreen)
+    }
+
     private fun onLoginError(e: Throwable) {
         _state.update { it.copy(isLoading = false) }
         when (e) {
