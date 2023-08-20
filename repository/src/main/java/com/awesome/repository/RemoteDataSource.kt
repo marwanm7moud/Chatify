@@ -14,4 +14,5 @@ interface RemoteDataSource {
     ) : UserDto
 
     suspend fun logout():Boolean
+    suspend fun isLoggedIn():Boolean
 }

@@ -14,4 +14,5 @@ interface AuthRepository {
     ) : UserEntity
 
     suspend fun logout():Boolean
+    suspend fun isLoggedIn()
 }

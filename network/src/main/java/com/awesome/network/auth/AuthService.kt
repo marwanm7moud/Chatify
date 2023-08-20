@@ -14,4 +14,5 @@ interface AuthService {
     ) : UserDto
 
     suspend fun logout():Boolean
+    suspend fun isLoggedIn():Boolean
 }

@@ -2,8 +2,8 @@ package com.awesome.network.auth
 
 import android.os.Bundle
 import com.awesome.network.toUserDto
-import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.repository.response.UserDto
+import com.quickblox.auth.session.QBSessionManager
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
 import com.quickblox.users.QBUsers
@@ -63,5 +63,9 @@ class QuickBloxAuthServiceImpl @Inject constructor() : AuthService {
                 }
             })
         }
+    }
+
+    override suspend fun isLoggedIn(): Boolean {
+        return QBSessionManager.getInstance().sessionParameters != null
     }
 }

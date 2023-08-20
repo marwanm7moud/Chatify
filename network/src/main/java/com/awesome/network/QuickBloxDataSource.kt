@@ -28,6 +28,10 @@ class QuickBloxDataSource @Inject constructor(
         return wrapApi { authService.logout() }
     }
 
+    override suspend fun isLoggedIn(): Boolean {
+        return wrapApi { authService.isLoggedIn()}
+    }
+
     suspend fun <T> wrapApi(call: suspend () -> T): T {
         return try {
             call() ?: throw NullDataException("Null")

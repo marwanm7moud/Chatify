@@ -4,6 +4,7 @@ import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.repository.RemoteDataSource
 import com.awesome.entities.repos.model.UserSignUpRequest
+import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.repository.repos.toUserEntity
 import com.awesome.repository.utils.Validator
 import javax.inject.Inject
@@ -31,6 +32,11 @@ class AuthRepositoryImpl @Inject constructor(
 
     override suspend fun logout(): Boolean {
         return remoteDataSource.logout()
+    }
+
+    override suspend fun isLoggedIn() {
+        if (!remoteDataSource.isLoggedIn())
+            throw UnauthorizedException("Session Expired")
     }
 
 }
