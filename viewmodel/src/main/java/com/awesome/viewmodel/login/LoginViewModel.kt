@@ -1,4 +1,4 @@
-package com.awesome.viewmodel.loginScreen
+package com.awesome.viewmodel.login
 
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository

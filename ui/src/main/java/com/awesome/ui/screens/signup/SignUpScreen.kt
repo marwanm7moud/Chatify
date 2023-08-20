@@ -17,12 +17,13 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.awesome.ui.screens.home.navigateToHome
 import com.awesome.ui.screens.login.navigateToLogin
 import com.awesome.ui.ui.theme.ChatifyTheme
-import com.awesome.viewmodel.signUpScreen.SignUpEvents
-import com.awesome.viewmodel.signUpScreen.SignUpInteractions
-import com.awesome.viewmodel.signUpScreen.SignUpUiState
-import com.awesome.viewmodel.signUpScreen.SignUpViewModel
+import com.awesome.viewmodel.signUp.SignUpEvents
+import com.awesome.viewmodel.signUp.SignUpInteractions
+import com.awesome.viewmodel.signUp.SignUpUiState
+import com.awesome.viewmodel.signUp.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -35,7 +36,7 @@ fun SignUpScreen(
     LaunchedEffect(key1 = signUpViewModel.event) {
         signUpViewModel.event.collectLatest {
             when (it) {
-                SignUpEvents.NavigateToHomeScreen -> TODO()
+                SignUpEvents.NavigateToHomeScreen -> navController.navigateToHome()
                 SignUpEvents.NavigateToLoginScreen -> navController.navigateToLogin()
                 is SignUpEvents.ShowToastForUnexpectedError -> TODO()
                 else -> TODO()

@@ -1,11 +1,8 @@
-package com.awesome.viewmodel.signUpScreen
+package com.awesome.viewmodel.signUp
 
-import android.util.Log
-import androidx.compose.ui.text.toLowerCase
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.model.UserSignUpRequest
-import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel

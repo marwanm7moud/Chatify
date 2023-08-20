@@ -1,4 +1,4 @@
-package com.awesome.viewmodel.loginScreen
+package com.awesome.viewmodel.login
 
 data class LoginUiState(
     val username: String = "",
