@@ -20,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import com.awesome.ui.screens.login.navigateToLogin
 import com.awesome.ui.ui.theme.ChatifyTheme
 import com.awesome.viewmodel.signUpScreen.SignUpEvents
+import com.awesome.viewmodel.signUpScreen.SignUpInteractions
+import com.awesome.viewmodel.signUpScreen.SignUpUiState
 import com.awesome.viewmodel.signUpScreen.SignUpViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -34,105 +36,79 @@ fun SignUpScreen(
         signUpViewModel.event.collectLatest {
             when (it) {
                 SignUpEvents.NavigateToHomeScreen -> TODO()
-                SignUpEvents.NavigateToLoginScreen -> TODO()
-                is SignUpEvents.ShowToastForUnexpectedError ->TODO()
-                else ->TODO()
+                SignUpEvents.NavigateToLoginScreen -> navController.navigateToLogin()
+                is SignUpEvents.ShowToastForUnexpectedError -> TODO()
+                else -> TODO()
             }
         }
     }
     SignUpContent(
-        username = state.username,
-        usernamePlaceHolder = state.usernamePlaceHolder,
-        password = state.password,
-        passwordPlaceHolder = state.passwordPlaceHolder,
-        email = state.email,
-        emailPlaceHolder = state.emailPlaceHolder,
-        fullName = state.fullName,
-        fullNamePlaceHolder = state.fullNamePlaceHolder,
-        onUsernameChanged = signUpViewModel::onUsernameChange,
-        onPasswordChanged = signUpViewModel::onPasswordChange,
-        onEmailChanged = signUpViewModel::onEmailChange,
-        onFullNameChanged = signUpViewModel::onFullNameChange,
-        onSignUpClicked = signUpViewModel::onCLickSignUp,
-        isLoading = state.isLoading,
-        onNavigateToLogin = { navController.navigateToLogin() }
+        signUpUiState = state,
+        signUpInteractions = signUpViewModel,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SignUpContent(
-    username: String,
-    usernamePlaceHolder: String?,
-    email: String,
-    emailPlaceHolder: String?,
-    fullName: String,
-    fullNamePlaceHolder: String?,
-    password: String,
-    passwordPlaceHolder: String?,
-    onUsernameChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onEmailChanged: (String) -> Unit,
-    onFullNameChanged: (String) -> Unit,
-    onSignUpClicked: () -> Unit,
-    isLoading: Boolean,
-    onNavigateToLogin: () -> Unit
+    signUpUiState: SignUpUiState,
+    signUpInteractions: SignUpInteractions,
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TextField(
-            label = {Text(text = "Fullname")},
-            value = fullName,
-            onValueChange = onFullNameChanged,
-            isError = fullNamePlaceHolder != null,
+            label = { Text(text = "Fullname") },
+            value = signUpUiState.fullName,
+            onValueChange = signUpInteractions::onFullNameChange,
+            isError = signUpUiState.fullNamePlaceHolder != null,
             supportingText = {
-                if (fullNamePlaceHolder != null) {
-                    Text(text = fullNamePlaceHolder)
+                if (signUpUiState.fullNamePlaceHolder != null) {
+                    Text(text = signUpUiState.fullNamePlaceHolder!!)
                 }
             }
         )
         TextField(
-            label = {Text(text = "Username")},
-            value = username,
-            onValueChange = onUsernameChanged,
-            isError = usernamePlaceHolder != null,
+            label = { Text(text = "Username") },
+            value = signUpUiState.username,
+            onValueChange = signUpInteractions::onUsernameChange,
+            isError = signUpUiState.usernamePlaceHolder != null,
             supportingText = {
-                if (usernamePlaceHolder != null) {
-                    Text(text = usernamePlaceHolder)
+                if (signUpUiState.usernamePlaceHolder != null) {
+                    Text(text = signUpUiState.usernamePlaceHolder!!)
                 }
             }
         )
         TextField(
-            label = {Text(text = "Email")},
-            value = email,
-            onValueChange = onEmailChanged,
-            isError = emailPlaceHolder != null,
+            label = { Text(text = "Email") },
+            value = signUpUiState.email,
+            onValueChange = signUpInteractions::onEmailChange,
+            isError = signUpUiState.emailPlaceHolder != null,
             supportingText = {
-                if (emailPlaceHolder != null) {
-                    Text(text = emailPlaceHolder)
+                if (signUpUiState.emailPlaceHolder != null) {
+                    Text(text = signUpUiState.emailPlaceHolder!!)
                 }
             }
         )
         TextField(
-            label = {Text(text = "Password")},
-            value = password,
-            onValueChange = onPasswordChanged,
-            isError = passwordPlaceHolder != null,
+            label = { Text(text = "Password") },
+            value = signUpUiState.password,
+            onValueChange = signUpInteractions::onPasswordChange,
+            isError = signUpUiState.passwordPlaceHolder != null,
             supportingText = {
-                if (passwordPlaceHolder != null) {
-                    Text(text = passwordPlaceHolder)
+                if (signUpUiState.passwordPlaceHolder != null) {
+                    Text(text = signUpUiState.passwordPlaceHolder!!)
                 }
             }
         )
-        Button(onClick = onSignUpClicked) {
-            if (isLoading)
+        Button(onClick = signUpInteractions::onCLickSignUp) {
+            if (signUpUiState.isLoading)
                 CircularProgressIndicator(
                     color = Color.White
                 )
             else
                 Text(text = "SignUp")
         }
-        Button(onClick = onNavigateToLogin) {
-            if (isLoading)
+        Button(onClick = signUpInteractions::onNavigateToLogin) {
+            if (signUpUiState.isLoading)
                 CircularProgressIndicator(
                     color = Color.White
                 )

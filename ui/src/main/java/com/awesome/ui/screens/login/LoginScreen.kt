@@ -20,6 +20,8 @@ import androidx.navigation.compose.rememberNavController
 import com.awesome.ui.screens.signup.navigateToSignUp
 import com.awesome.ui.ui.theme.ChatifyTheme
 import com.awesome.viewmodel.loginScreen.LoginEvents
+import com.awesome.viewmodel.loginScreen.LoginInteractions
+import com.awesome.viewmodel.loginScreen.LoginUiState
 import com.awesome.viewmodel.loginScreen.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
 
@@ -35,69 +37,55 @@ fun LoginScreen(
             Log.e("TAG", "LoginScreen: ${it}", )
             when (it) {
                 LoginEvents.NavigateToHomeScreen -> TODO()
-                LoginEvents.NavigateToSignUpScreen -> TODO()
+                LoginEvents.NavigateToSignUpScreen -> navController.navigateToSignUp()
                 is LoginEvents.ShowToastForUnexpectedError ->TODO()
                 else ->TODO()
             }
         }
     }
     LoginContent(
-        username = state.username,
-        usernamePlaceHolder = state.usernamePlaceHolder,
-        password = state.password,
-        passwordPlaceHolder = state.passwordPlaceHolder,
-        onUsernameChanged = loginViewModel::onUsernameChange,
-        onPasswordChanged = loginViewModel::onPasswordChange,
-        onLoginClicked = loginViewModel::onCLickLogin,
-        isLoading = state.isLoading,
-        onNavigateToSignUp = { navController.navigateToSignUp()}
+        loginUiState = state,
+        loginInteractions = loginViewModel,
     )
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginContent(
-    username: String,
-    usernamePlaceHolder: String?,
-    password: String,
-    passwordPlaceHolder: String?,
-    onUsernameChanged: (String) -> Unit,
-    onPasswordChanged: (String) -> Unit,
-    onLoginClicked: () -> Unit,
-    isLoading: Boolean,
-    onNavigateToSignUp: () -> Unit,
+    loginUiState: LoginUiState,
+    loginInteractions: LoginInteractions
 ) {
     Column(modifier = Modifier.fillMaxSize()) {
         TextField(
-            value = username,
-            onValueChange = onUsernameChanged,
-            isError = usernamePlaceHolder != null,
+            value = loginUiState.username,
+            onValueChange = loginInteractions::onUsernameChange,
+            isError = loginUiState.usernamePlaceHolder != null,
             supportingText = {
-                if (usernamePlaceHolder != null) {
-                    Text(text = usernamePlaceHolder)
+                if (loginUiState.usernamePlaceHolder != null) {
+                    Text(text = loginUiState.usernamePlaceHolder!!)
                 }
             }
         )
         TextField(
-            value = password,
-            onValueChange = onPasswordChanged,
-            isError = passwordPlaceHolder!=null,
+            value = loginUiState.password,
+            onValueChange = loginInteractions::onPasswordChange,
+            isError = loginUiState.passwordPlaceHolder!=null,
             supportingText = {
-                if (passwordPlaceHolder != null) {
-                    Text(text = passwordPlaceHolder)
+                if (loginUiState.passwordPlaceHolder != null) {
+                    Text(text = loginUiState.passwordPlaceHolder!!)
                 }
             }
         )
-        Button(onClick = onLoginClicked) {
-            if (isLoading)
+        Button(onClick = loginInteractions::onCLickLogin) {
+            if (loginUiState.isLoading)
                 CircularProgressIndicator(
                     color = Color.White
                 )
             else
                 Text(text = "Login")
         }
-        Button(onClick = onNavigateToSignUp) {
-            if (isLoading)
+        Button(onClick = loginInteractions::onNavigateToSignUp) {
+            if (loginUiState.isLoading)
                 CircularProgressIndicator(
                     color = Color.White
                 )
