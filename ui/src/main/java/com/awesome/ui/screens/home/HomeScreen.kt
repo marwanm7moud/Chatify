@@ -24,14 +24,13 @@ fun HomeScreen(
     val state by homeViewModel.state.collectAsState()
     LaunchedEffect(key1 = homeViewModel.event) {
         homeViewModel.event.collectLatest {
-            Log.e("TAG", "HomeScreen: $it")
             when (it) {
                 HomeEvents.NavigateToLoginScreen -> navController.navigateToLogin()
                 else -> {}
             }
         }
     }
-    if (!state.error.isNullOrEmpty()) {
+    if (state.error == "Session Expired") {
         AlertDialog(
             title = { Text(text = state.error!!) },
             confirmButton = {
@@ -42,7 +41,11 @@ fun HomeScreen(
             dismissButton = {},
             onDismissRequest = { }
         )
-
+    }
+    if (state.isLogged == false) {
+        LaunchedEffect(key1 = Unit ){
+            navController.navigateToLogin()
+        }
     }
 
 }

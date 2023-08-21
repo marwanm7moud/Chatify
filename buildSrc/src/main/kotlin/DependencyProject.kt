@@ -12,6 +12,7 @@ object Versions {
     const val HILT_COMPOSE_VERSION = "1.0.0"
     const val NAVIGATION_VERSION = "2.5.3"
     const val DATASTORE_VERSION = "1.0.0-beta01"
+    const val COROUTINES_VERSION = "1.3.9"
 }
 
 object DependencyProject {
@@ -38,6 +39,8 @@ object DependencyProject {
 
 
     const val data_store = "androidx.datastore:datastore-preferences:${Versions.DATASTORE_VERSION}"
+
+    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINES_VERSION}"
 
     @JvmField
     val quickBloxSdk = listOf(

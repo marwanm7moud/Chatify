@@ -1,11 +1,15 @@
 package com.awesome.viewmodel.home
 
 import android.util.Log
+import androidx.lifecycle.viewModelScope
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -17,11 +21,11 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun isLoggedIn(){
-        tryToExecute(
-            call = authRepository::isLoggedIn,
-            onSuccess = ::isLoggedSuccess,
-            onError = ::isLoggedError
-        )
+        viewModelScope.launch {
+            authRepository.isLoggedIn().collectLatest {isLogged->
+                _state.update { it.copy(isLogged = isLogged) }
+            }
+        }
     }
 
     private fun isLoggedError(throwable: Throwable) {

@@ -7,3 +7,6 @@ java {
     sourceCompatibility = Configurations.JAVA_VERSION
     targetCompatibility = Configurations.JAVA_VERSION
 }
+dependencies {
+    implementation(DependencyProject.coroutines)
+}

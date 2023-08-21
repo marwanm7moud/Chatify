@@ -13,5 +13,5 @@ fun NavGraphBuilder.homeRoute(navController: NavController){
 
 fun NavController.navigateToHome(){
     popBackStack()
-    navigate(ChatifyScreens.Login.route)
+    navigate(ChatifyScreens.Home.route)
 }

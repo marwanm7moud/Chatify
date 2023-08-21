@@ -1,10 +1,10 @@
 package com.awesome.local
 
+import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
-import androidx.datastore.preferences.core.stringPreferencesKey
 import com.awesome.repository.LocalDataSource
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -13,21 +13,19 @@ import javax.inject.Inject
 
 
 class DataStoreDataSource @Inject constructor(
-    private val dataStore: DataStore<Preferences>
+    private val dataStore: DataStore<Preferences>,
 ) : LocalDataSource {
-    override suspend fun setUserId(userId: String) {
-        runBlocking {
-            dataStore.edit { it[USERID] = userId }
+    override suspend fun setLoginStatus(isLogged: Boolean) {
+        dataStore.edit {
+            it[booleanPreferencesKey(USERID)] = isLogged
         }
     }
 
-    override suspend fun getUserId(): Flow<String> {
-        return dataStore.data.map {
-            it[USERID] ?: ""
-        }
-    }
+    override val currentUserLoginState: Flow<Boolean>
+        get() = dataStore.data.map { it[booleanPreferencesKey(USERID)] ?: false }
+
 
     companion object {
-        private val USERID = stringPreferencesKey("USER_ID")
+        private const val USERID = "USER_ID"
     }
 }

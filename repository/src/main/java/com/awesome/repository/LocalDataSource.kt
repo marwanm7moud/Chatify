@@ -4,8 +4,8 @@ import kotlinx.coroutines.flow.Flow
 
 
 interface LocalDataSource {
-    suspend fun setUserId(userId:String)
+    suspend fun setLoginStatus(isLogged: Boolean)
 
-    suspend fun getUserId(): Flow<String>
+    val currentUserLoginState: Flow<Boolean>
 
 }
