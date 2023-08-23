@@ -7,6 +7,7 @@ enum class HttpStatusCode(val code : Int) {
     Forbidden(403),
     NotFound(404),
     Validation(422),
+    DeletedUser(-1),
     TooManyRequests(429),
     InternalServerError(500),
     ServiceUnavailable(503),

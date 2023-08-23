@@ -14,7 +14,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-class QuickBloxAuthServiceImpl @Inject constructor() : AuthService {
+class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthService {
     override suspend fun signUp(userSignUpRequest: com.awesome.entities.repos.model.UserSignUpRequest): UserDto {
         val user = QBUser()
         user.email = userSignUpRequest.email

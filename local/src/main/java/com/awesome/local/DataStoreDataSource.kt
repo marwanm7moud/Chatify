@@ -1,15 +1,17 @@
 package com.awesome.local
 
-import android.util.Log
 import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import com.awesome.repository.LocalDataSource
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.first
+import kotlinx.coroutines.flow.last
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.suspendCoroutine
 
 
 class DataStoreDataSource @Inject constructor(
@@ -21,8 +23,9 @@ class DataStoreDataSource @Inject constructor(
         }
     }
 
-    override val currentUserLoginState: Flow<Boolean>
-        get() = dataStore.data.map { it[booleanPreferencesKey(USERID)] ?: false }
+    override suspend fun getLoginState(): Boolean {
+        return dataStore.data.map { it[booleanPreferencesKey(USERID)] ?: false }.last()
+    }
 
 
     companion object {

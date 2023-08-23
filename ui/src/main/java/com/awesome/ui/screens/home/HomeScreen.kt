@@ -11,11 +11,14 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.awesome.ui.screens.login.navigateToLogin
 import com.awesome.viewmodel.home.HomeEvents
 import com.awesome.viewmodel.home.HomeViewModel
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -30,19 +33,18 @@ fun HomeScreen(
             }
         }
     }
-    if (state.error == "Session Expired") {
+    if (state.isSessionExpired) {
         AlertDialog(
-            title = { Text(text = state.error!!) },
+            title = { Text(text = "Session Expired") },
             confirmButton = {
                 TextButton(onClick = homeViewModel::onSessionExpiredConfirm) {
                     Text(text = "Ok")
                 }
             },
-            dismissButton = {},
             onDismissRequest = { }
         )
     }
-    if (state.isLogged == false) {
+    if (state.isLogged==false) {
         LaunchedEffect(key1 = Unit ){
             navController.navigateToLogin()
         }
@@ -58,7 +60,8 @@ fun HomeContent() {
 @Composable
 @Preview
 fun HomeScreenPreview() {
-
+    val nav = rememberNavController()
+    HomeScreen(nav)
 }
 
 

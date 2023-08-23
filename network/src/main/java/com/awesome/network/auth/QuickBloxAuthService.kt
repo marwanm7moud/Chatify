@@ -1,9 +1,8 @@
 package com.awesome.network.auth
 
-import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.repository.response.UserDto
 
-interface AuthService {
+interface QuickBloxAuthService {
     suspend fun signUp(
         userSignUpRequest: com.awesome.entities.repos.model.UserSignUpRequest
     ) : UserDto

@@ -1,5 +1,6 @@
 package com.awesome.viewmodel.signUp
 
+import androidx.lifecycle.viewModelScope
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.model.UserSignUpRequest
@@ -7,6 +8,7 @@ import com.awesome.entities.utils.ValidationException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -78,8 +80,12 @@ class SignUpViewModel @Inject constructor(
     }
 
     private fun onSignUpSuccess(userEntity: UserEntity) {
-        _state.update { it.copy(isLoading = false) }
-        sendEvent(SignUpEvents.NavigateToHomeScreen)
+        viewModelScope.launch{
+            _state.update { it.copy(isLoading = false) }
+            authRepository.manageLoginState(true)
+            sendEvent(SignUpEvents.NavigateToHomeScreen)
+        }
+
     }
 
 }

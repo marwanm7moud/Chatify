@@ -1,7 +1,9 @@
 package com.awesome.network
 
+import android.util.Log
 import com.awesome.entities.repos.model.UserSignUpRequest
-import com.awesome.network.auth.AuthService
+import com.awesome.entities.utils.UpdatedOrDeletedUserException
+import com.awesome.network.auth.QuickBloxAuthService
 import com.awesome.repository.RemoteDataSource
 import com.awesome.repository.response.UserDto
 import com.awesome.entities.utils.HttpStatusCode
@@ -10,11 +12,13 @@ import com.awesome.entities.utils.NullDataException
 import com.awesome.entities.utils.ServerException
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
+import com.awesome.network.chat.QuickBloxChatService
 import com.quickblox.core.exception.QBResponseException
 import javax.inject.Inject
 
 class QuickBloxDataSource @Inject constructor(
-    private val authService: AuthService
+    private val authService: QuickBloxAuthService,
+    private val chatRepository: QuickBloxChatService
 ) : RemoteDataSource {
     override suspend fun signUp(userSignUpRequest: UserSignUpRequest): UserDto {
         return wrapApi { authService.signUp(userSignUpRequest) }
@@ -32,10 +36,20 @@ class QuickBloxDataSource @Inject constructor(
         return wrapApi { authService.isLoggedIn()}
     }
 
-    suspend fun <T> wrapApi(call: suspend () -> T): T {
+    override suspend fun connectToChatServer() {
+        return wrapApi { chatRepository.connectToChatServer()}
+    }
+
+    override suspend fun subscribeToConnectionState(): String {
+        return wrapApi { chatRepository.subscribeToConnectionState()}
+    }
+
+    private suspend fun <T> wrapApi(call: suspend () -> T): T {
         return try {
             call() ?: throw NullDataException("Null")
         } catch (e: QBResponseException) {
+            Log.e("TAG", "onConnectToChatError: ${e.httpStatusCode}", )
+
             when (e.httpStatusCode) {
                 HttpStatusCode.NoInternet.code -> throw NetworkException(e.errors.toString())
                 HttpStatusCode.BadRequest.code -> throw NetworkException(e.errors.toString())
@@ -46,8 +60,11 @@ class QuickBloxDataSource @Inject constructor(
                 HttpStatusCode.TooManyRequests.code -> throw NetworkException(e.errors.toString())
                 HttpStatusCode.InternalServerError.code -> throw ServerException(e.errors.toString())
                 HttpStatusCode.ServiceUnavailable.code -> throw ServerException(e.errors.toString())
-                else -> throw Exception(e.message)
+                HttpStatusCode.DeletedUser.code -> throw UpdatedOrDeletedUserException(e.errors.toString())
             }
+            throw Exception(e.message)
+        } catch (e:Throwable){
+            throw Exception(e.message)
         }
     }
 }

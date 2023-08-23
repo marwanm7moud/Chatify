@@ -15,4 +15,7 @@ interface RemoteDataSource {
 
     suspend fun logout():Boolean
     suspend fun isLoggedIn():Boolean
+
+    suspend fun connectToChatServer()
+    suspend fun subscribeToConnectionState():String
 }
