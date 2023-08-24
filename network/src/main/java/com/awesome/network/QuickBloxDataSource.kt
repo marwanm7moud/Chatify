@@ -14,6 +14,7 @@ import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import com.awesome.network.chat.QuickBloxChatService
 import com.quickblox.core.exception.QBResponseException
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class QuickBloxDataSource @Inject constructor(
@@ -36,35 +37,19 @@ class QuickBloxDataSource @Inject constructor(
         return wrapApi { authService.isLoggedIn()}
     }
 
+    override suspend fun destroySession() {
+        return wrapApi { authService.destroySession()}
+    }
+
     override suspend fun connectToChatServer() {
         return wrapApi { chatRepository.connectToChatServer()}
     }
 
-    override suspend fun subscribeToConnectionState(): String {
-        return wrapApi { chatRepository.subscribeToConnectionState()}
+    override  fun subscribeToConnectionState(): Flow<String> {
+        return chatRepository.subscribeToConnectionState()
     }
 
-    private suspend fun <T> wrapApi(call: suspend () -> T): T {
-        return try {
-            call() ?: throw NullDataException("Null")
-        } catch (e: QBResponseException) {
-            Log.e("TAG", "onConnectToChatError: ${e.httpStatusCode}", )
-
-            when (e.httpStatusCode) {
-                HttpStatusCode.NoInternet.code -> throw NetworkException(e.errors.toString())
-                HttpStatusCode.BadRequest.code -> throw NetworkException(e.errors.toString())
-                HttpStatusCode.Unauthorized.code -> throw UnauthorizedException(e.errors.toString())
-                HttpStatusCode.Forbidden.code -> throw NetworkException(e.errors.toString())
-                HttpStatusCode.NotFound.code -> throw NetworkException(e.errors.toString())
-                HttpStatusCode.Validation.code -> throw ValidationException(e.errors)
-                HttpStatusCode.TooManyRequests.code -> throw NetworkException(e.errors.toString())
-                HttpStatusCode.InternalServerError.code -> throw ServerException(e.errors.toString())
-                HttpStatusCode.ServiceUnavailable.code -> throw ServerException(e.errors.toString())
-                HttpStatusCode.DeletedUser.code -> throw UpdatedOrDeletedUserException(e.errors.toString())
-            }
-            throw Exception(e.message)
-        } catch (e:Throwable){
-            throw Exception(e.message)
-        }
+    override fun disconnectFromChatServer() {
+        return chatRepository.disconnectFromChatServer()
     }
 }

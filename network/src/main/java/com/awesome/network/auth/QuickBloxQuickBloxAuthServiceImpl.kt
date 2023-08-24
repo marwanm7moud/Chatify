@@ -3,6 +3,7 @@ package com.awesome.network.auth
 import android.os.Bundle
 import com.awesome.network.toUserDto
 import com.awesome.repository.response.UserDto
+import com.quickblox.auth.QBAuth
 import com.quickblox.auth.session.QBSessionManager
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
@@ -51,8 +52,8 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
         }
     }
 
-    override suspend fun logout() :Boolean {
-        return suspendCoroutine {con->
+    override suspend fun logout(): Boolean {
+        return suspendCoroutine { con ->
             QBUsers.signOut().performAsync(object : QBEntityCallback<Void> {
                 override fun onSuccess(aVoid: Void?, bundle: Bundle?) {
                     con.resume(true)
@@ -67,5 +68,19 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
 
     override suspend fun isLoggedIn(): Boolean {
         return QBSessionManager.getInstance().sessionParameters != null
+    }
+
+    override suspend fun destroySession() {
+        return suspendCoroutine { con ->
+            QBAuth.deleteSession().performAsync(object : QBEntityCallback<Void> {
+                override fun onSuccess(aVoid: Void?, bundle: Bundle?) {
+                    con.resume(Unit)
+                }
+
+                override fun onError(exception: QBResponseException?) {
+                    con.resumeWithException(exception!!)
+                }
+            })
+        }
     }
 }

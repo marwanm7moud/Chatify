@@ -26,7 +26,7 @@ open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     protected fun <T> tryToExecute(
         call: suspend () -> T,
         onSuccess: (T) -> Unit,
-        onError: (e:Throwable) -> Unit,
+        onError: (e: Throwable) -> Unit,
     ) {
         viewModelScope.launch {
             try {
@@ -48,6 +48,12 @@ open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     }
 
     protected fun sendEvent(event: EVENT) {
-        viewModelScope.launch { _event.emit(event) }
+        viewModelScope.launch(Dispatchers.IO) { _event.emit(event) }
+    }
+
+    protected fun collectFlow(collect: suspend () -> Unit) {
+        viewModelScope.launch(Dispatchers.IO) {
+            collect()
+        }
     }
 }

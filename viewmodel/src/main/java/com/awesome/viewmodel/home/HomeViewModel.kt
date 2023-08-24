@@ -7,6 +7,7 @@ import com.awesome.entities.repos.ChatRepository
 import com.awesome.entities.utils.UpdatedOrDeletedUserException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -17,26 +18,26 @@ class HomeViewModel @Inject constructor(
     private val chatRepository: ChatRepository,
 ) : BaseViewModel<HomeUiState, HomeEvents>(HomeUiState()), HomeInteractions {
     init {
-        isLoggedIn().also {
-            connectToChatServer()
-            connectionState()
-        }
+        isLoggedIn()
+        connectToChatServer()
+        connectionState()
+
     }
 
     private fun isLoggedIn() {
-        viewModelScope.launch {
-            val isLogged = authRepository.getLoginState()
-            Log.e("TAG", "isLoggedIn: $isLogged", )
-            _state.update { it.copy(isLogged = isLogged) }
+        collectFlow {
+            authRepository.getLoginState().collectLatest {loginState->
+                _state.update { it.copy(isLogged = loginState) }
+            }
         }
     }
 
     private fun connectionState() {
-        tryToExecute(
-            call = chatRepository::subscribeToConnectionState,
-            onSuccess = ::onConnectionStateSuccess,
-            onError = ::onConnectionStateError
-        )
+        collectFlow {
+            chatRepository.subscribeToConnectionState().collectLatest {
+                Log.e("TAG", "connectionState: $it", )
+            }
+        }
     }
 
     private fun connectToChatServer() {
@@ -50,24 +51,17 @@ class HomeViewModel @Inject constructor(
     private fun onConnectToChatError(throwable: Throwable) {
         when (throwable) {
             is UpdatedOrDeletedUserException -> {
-                viewModelScope.launch { authRepository.manageLoginState(false) }
                 _state.update { it.copy(isSessionExpired = true) }
+                chatRepository.disconnectFromChatServer()
             }
         }
     }
-
-    private fun onConnectionStateError(throwable: Throwable) {
-        Log.e("TAG", "onConnectToChatError: ${throwable.message}")
-
-    }
-
-    private fun onConnectionStateSuccess(connectionState: String) {
-        Log.e("TAG", "onConnectionStateSuccess: $connectionState")
-    }
-
-
     private fun isSuccessNullReturn(unit: Unit) {}
     override fun onSessionExpiredConfirm() {
+        viewModelScope.launch {
+            authRepository.manageLoginState(false)
+        }
+        _state.update { HomeUiState()}
         sendEvent(HomeEvents.NavigateToLoginScreen)
     }
 }

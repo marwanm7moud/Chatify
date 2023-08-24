@@ -1,6 +1,9 @@
 package com.awesome.entities.repos
 
+import kotlinx.coroutines.flow.Flow
+
 interface ChatRepository {
     suspend fun connectToChatServer()
-    suspend fun subscribeToConnectionState():String
+    fun subscribeToConnectionState():Flow<String>
+    fun disconnectFromChatServer()
 }

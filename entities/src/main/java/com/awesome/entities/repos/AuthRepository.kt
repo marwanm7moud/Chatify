@@ -2,6 +2,7 @@ package com.awesome.entities.repos
 
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.model.UserSignUpRequest
+import kotlinx.coroutines.flow.Flow
 
 interface AuthRepository {
     suspend fun signUp(
@@ -14,6 +15,7 @@ interface AuthRepository {
     ) : UserEntity
 
     suspend fun logout():Boolean
+    suspend fun destroySession()
     suspend fun manageLoginState(isLogin:Boolean)
-    suspend fun getLoginState(): Boolean
+    suspend fun getLoginState(): Flow<Boolean>
 }

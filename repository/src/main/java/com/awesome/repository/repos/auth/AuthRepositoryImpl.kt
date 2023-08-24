@@ -36,11 +36,15 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.logout()
     }
 
+    override suspend fun destroySession(){
+        remoteDataSource.destroySession()
+    }
+
     override suspend fun manageLoginState(isLogin: Boolean) {
         localDataSource.setLoginStatus(isLogin)
     }
 
-    override suspend fun getLoginState() : Boolean {
+    override suspend fun getLoginState() : Flow<Boolean> {
         return localDataSource.getLoginState()
     }
 }

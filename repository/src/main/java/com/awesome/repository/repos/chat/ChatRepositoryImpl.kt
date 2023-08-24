@@ -3,6 +3,7 @@ package com.awesome.repository.repos.chat
 import com.awesome.entities.repos.ChatRepository
 import com.awesome.repository.LocalDataSource
 import com.awesome.repository.RemoteDataSource
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class ChatRepositoryImpl @Inject constructor(
@@ -13,7 +14,11 @@ class ChatRepositoryImpl @Inject constructor(
         remoteDataSource.connectToChatServer()
     }
 
-    override suspend fun subscribeToConnectionState(): String {
+    override  fun subscribeToConnectionState(): Flow<String> {
        return remoteDataSource.subscribeToConnectionState()
+    }
+
+    override fun disconnectFromChatServer() {
+        return remoteDataSource.disconnectFromChatServer()
     }
 }
