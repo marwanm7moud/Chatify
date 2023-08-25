@@ -10,10 +10,12 @@ import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
@@ -51,9 +53,9 @@ open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
         viewModelScope.launch(Dispatchers.IO) { _event.emit(event) }
     }
 
-    protected fun collectFlow(collect: suspend () -> Unit) {
+    protected fun <T> collectFlow(flow: Flow<T> , collect: suspend (T) -> Unit) {
         viewModelScope.launch(Dispatchers.IO) {
-            collect()
+            flow.collectLatest(collect)
         }
     }
 }

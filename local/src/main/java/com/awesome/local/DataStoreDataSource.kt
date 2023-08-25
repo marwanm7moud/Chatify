@@ -24,7 +24,7 @@ class DataStoreDataSource @Inject constructor(
         }
     }
 
-    override suspend fun getLoginState(): Flow<Boolean> {
+    override fun getLoginState(): Flow<Boolean> {
         return dataStore.data.map { it[booleanPreferencesKey(USERID)] ?: false }
     }
 

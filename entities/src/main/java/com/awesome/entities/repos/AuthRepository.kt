@@ -17,5 +17,5 @@ interface AuthRepository {
     suspend fun logout():Boolean
     suspend fun destroySession()
     suspend fun manageLoginState(isLogin:Boolean)
-    suspend fun getLoginState(): Flow<Boolean>
+    fun getLoginState(): Flow<Boolean>
 }

@@ -44,7 +44,7 @@ class AuthRepositoryImpl @Inject constructor(
         localDataSource.setLoginStatus(isLogin)
     }
 
-    override suspend fun getLoginState() : Flow<Boolean> {
+    override fun getLoginState() : Flow<Boolean> {
         return localDataSource.getLoginState()
     }
 }

@@ -8,6 +8,7 @@ import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
 import com.quickblox.users.model.QBUser
 import kotlinx.coroutines.channels.awaitClose
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import kotlinx.coroutines.flow.flow
@@ -47,6 +48,7 @@ class QuickBloxChatServiceImpl @Inject constructor(
 
             override fun authenticated(connection: XMPPConnection, resumed: Boolean) {
                 trySend("authenticated")
+                trySend("connected")
             }
 
             override fun connectionClosed() {
@@ -59,10 +61,11 @@ class QuickBloxChatServiceImpl @Inject constructor(
 
             override fun reconnectionSuccessful() {
                 trySend("reconnectionSuccessful")
+                trySend("connected")
             }
 
             override fun reconnectingIn(seconds: Int) {
-                trySend("reconnectingIn")
+                trySend("reconnecting in $seconds")
             }
 
             override fun reconnectionFailed(exception: Exception) {
