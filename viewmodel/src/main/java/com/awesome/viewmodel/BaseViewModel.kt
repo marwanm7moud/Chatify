@@ -22,7 +22,7 @@ open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     protected val _state by lazy { MutableStateFlow<STATE>(state) }
     val state = _state.asStateFlow()
 
-    protected val _event = MutableSharedFlow<EVENT>()
+    private val _event = MutableSharedFlow<EVENT>()
     val event = _event.asSharedFlow()
 
     protected fun <T> tryToExecute(
@@ -50,10 +50,16 @@ open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     }
 
     protected fun sendEvent(event: EVENT) {
-        viewModelScope.launch(Dispatchers.IO) { _event.emit(event) }
+        viewModelScope.launch {
+            delay(1)
+            _event.emit(event)
+        }
     }
 
-    protected fun <T> collectFlow(flow: Flow<T> , collect: suspend (T) -> Unit) {
+    protected fun <T> collectFlow(
+        flow: Flow<T>,
+        collect:(T) -> Unit
+    ) {
         viewModelScope.launch(Dispatchers.IO) {
             flow.collectLatest(collect)
         }

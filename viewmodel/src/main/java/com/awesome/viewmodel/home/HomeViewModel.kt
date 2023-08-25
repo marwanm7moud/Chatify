@@ -26,7 +26,7 @@ class HomeViewModel @Inject constructor(
 
     private fun isLoggedIn() {
         collectFlow(authRepository.getLoginState()){loginState->
-            _state.update { it.copy(isLogged = loginState) }
+            if (!loginState)sendEvent(HomeEvents.NavigateToLoginScreen)
         }
     }
 
@@ -57,7 +57,6 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             authRepository.manageLoginState(false)
         }
-        _state.update { HomeUiState()}
         sendEvent(HomeEvents.NavigateToLoginScreen)
     }
 }
