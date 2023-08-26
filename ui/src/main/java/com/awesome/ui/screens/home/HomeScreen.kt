@@ -29,13 +29,13 @@ import com.awesome.viewmodel.home.HomeViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 
+@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
     homeViewModel: HomeViewModel = hiltViewModel()
 ) {
     val state by homeViewModel.state.collectAsState()
-
     HomeContent(state, homeViewModel)
     LaunchedEffect(key1 = homeViewModel.event) {
         homeViewModel.event.collectLatest {
