@@ -59,4 +59,8 @@ class HomeViewModel @Inject constructor(
         }
         sendEvent(HomeEvents.NavigateToLoginScreen)
     }
+
+    override fun onSearchIconClicked() {
+        sendEvent(HomeEvents.NavigateToSearchScreen)
+    }
 }
