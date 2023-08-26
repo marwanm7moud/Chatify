@@ -12,6 +12,9 @@ fun NavGraphBuilder.loginRoute(navController: NavController){
 }
 
 fun NavController.navigateToLogin(){
-    popBackStack()
-    navigate(ChatifyScreens.Login.route)
+    navigate(ChatifyScreens.Login.route){
+        popUpTo(ChatifyScreens.Home.route) {
+            inclusive = true
+        }
+    }
 }

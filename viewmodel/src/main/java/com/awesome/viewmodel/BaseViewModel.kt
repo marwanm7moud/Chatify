@@ -10,23 +10,25 @@ import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
 open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     protected val _state by lazy { MutableStateFlow<STATE>(state) }
     val state = _state.asStateFlow()
 
-    protected val _event = MutableSharedFlow<EVENT>()
+    private val _event = MutableSharedFlow<EVENT>()
     val event = _event.asSharedFlow()
 
     protected fun <T> tryToExecute(
         call: suspend () -> T,
         onSuccess: (T) -> Unit,
-        onError: (e:Throwable) -> Unit,
+        onError: (e: Throwable) -> Unit,
     ) {
         viewModelScope.launch {
             try {
@@ -48,6 +50,18 @@ open class BaseViewModel<STATE, EVENT>(state: STATE) : ViewModel() {
     }
 
     protected fun sendEvent(event: EVENT) {
-        viewModelScope.launch { _event.emit(event) }
+        viewModelScope.launch {
+            delay(1)
+            _event.emit(event)
+        }
+    }
+
+    protected fun <T> collectFlow(
+        flow: Flow<T>,
+        collect:(T) -> Unit
+    ) {
+        viewModelScope.launch(Dispatchers.IO) {
+            flow.collectLatest(collect)
+        }
     }
 }

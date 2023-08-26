@@ -1,4 +1,4 @@
-package com.awesome.viewmodel.loginScreen
+package com.awesome.viewmodel.login
 
 sealed interface LoginEvents{
     object NavigateToSignUpScreen : LoginEvents

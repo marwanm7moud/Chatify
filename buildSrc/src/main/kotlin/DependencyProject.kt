@@ -11,6 +11,8 @@ object Versions {
     const val HILT_VERSION = "2.44"
     const val HILT_COMPOSE_VERSION = "1.0.0"
     const val NAVIGATION_VERSION = "2.5.3"
+    const val DATASTORE_VERSION = "1.0.0-beta01"
+    const val COROUTINES_VERSION = "1.3.9"
 }
 
 object DependencyProject {
@@ -34,6 +36,12 @@ object DependencyProject {
     const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.HILT_VERSION}"
     const val hilt_compose = "androidx.hilt:hilt-navigation-compose:${Versions.HILT_COMPOSE_VERSION}"
     const val navigation = "androidx.navigation:navigation-compose:${Versions.NAVIGATION_VERSION}"
+
+
+    const val data_store = "androidx.datastore:datastore-preferences:${Versions.DATASTORE_VERSION}"
+
+    const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINES_VERSION}"
+
     @JvmField
     val quickBloxSdk = listOf(
         "com.quickblox:quickblox-android-sdk-messages:4.1.1",

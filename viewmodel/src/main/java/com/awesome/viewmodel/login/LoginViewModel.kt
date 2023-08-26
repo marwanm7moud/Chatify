@@ -1,12 +1,15 @@
-package com.awesome.viewmodel.loginScreen
+package com.awesome.viewmodel.login
 
+import androidx.lifecycle.viewModelScope
 import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import com.awesome.viewmodel.BaseViewModel
+import com.awesome.viewmodel.signUp.SignUpEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -58,7 +61,10 @@ class LoginViewModel @Inject constructor(
     }
 
     private fun onLoginSuccess(userEntity: UserEntity) {
-        _state.update { it.copy(isLoading = false) }
-        sendEvent(LoginEvents.NavigateToHomeScreen)
+        viewModelScope.launch{
+            _state.update { it.copy(isLoading = false) }
+            authRepository.manageLoginState(true)
+            sendEvent(LoginEvents.NavigateToHomeScreen)
+        }
     }
 }

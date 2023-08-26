@@ -1,6 +1,5 @@
 package com.awesome.ui.screens.login
 
-import android.util.Log
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Button
@@ -17,12 +16,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
+import com.awesome.ui.screens.home.navigateToHome
 import com.awesome.ui.screens.signup.navigateToSignUp
 import com.awesome.ui.ui.theme.ChatifyTheme
-import com.awesome.viewmodel.loginScreen.LoginEvents
-import com.awesome.viewmodel.loginScreen.LoginInteractions
-import com.awesome.viewmodel.loginScreen.LoginUiState
-import com.awesome.viewmodel.loginScreen.LoginViewModel
+import com.awesome.viewmodel.login.LoginEvents
+import com.awesome.viewmodel.login.LoginInteractions
+import com.awesome.viewmodel.login.LoginUiState
+import com.awesome.viewmodel.login.LoginViewModel
 import kotlinx.coroutines.flow.collectLatest
 
 
@@ -34,9 +34,8 @@ fun LoginScreen(
     val state by loginViewModel.state.collectAsState()
     LaunchedEffect(key1 = loginViewModel.event) {
         loginViewModel.event.collectLatest {
-            Log.e("TAG", "LoginScreen: ${it}", )
             when (it) {
-                LoginEvents.NavigateToHomeScreen -> TODO()
+                LoginEvents.NavigateToHomeScreen -> navController.navigateToHome()
                 LoginEvents.NavigateToSignUpScreen -> navController.navigateToSignUp()
                 is LoginEvents.ShowToastForUnexpectedError ->TODO()
                 else ->TODO()

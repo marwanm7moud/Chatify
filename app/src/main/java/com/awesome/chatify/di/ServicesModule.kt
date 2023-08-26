@@ -1,9 +1,9 @@
 package com.awesome.chatify.di
 
-import com.awesome.network.QuickBloxDataSource
-import com.awesome.network.auth.AuthService
-import com.awesome.network.auth.QuickBloxAuthServiceImpl
-import com.awesome.repository.RemoteDataSource
+import com.awesome.network.auth.QuickBloxAuthService
+import com.awesome.network.auth.QuickBloxQuickBloxAuthServiceImpl
+import com.awesome.network.chat.QuickBloxChatService
+import com.awesome.network.chat.QuickBloxChatServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -14,6 +14,9 @@ import dagger.hilt.components.SingletonComponent
 abstract class ServicesModule {
 
     @Binds
-    abstract fun provideAuthService(quickBloxAuthServiceImpl: QuickBloxAuthServiceImpl):AuthService
+    abstract fun provideAuthService(quickBloxAuthServiceImpl: QuickBloxQuickBloxAuthServiceImpl):QuickBloxAuthService
+
+    @Binds
+    abstract fun provideChatService(quickBloxChatServiceImpl: QuickBloxChatServiceImpl):QuickBloxChatService
 
 }

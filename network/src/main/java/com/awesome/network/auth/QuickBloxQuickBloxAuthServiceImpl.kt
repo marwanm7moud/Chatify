@@ -2,8 +2,9 @@ package com.awesome.network.auth
 
 import android.os.Bundle
 import com.awesome.network.toUserDto
-import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.repository.response.UserDto
+import com.quickblox.auth.QBAuth
+import com.quickblox.auth.session.QBSessionManager
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
 import com.quickblox.users.QBUsers
@@ -14,7 +15,7 @@ import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
 
-class QuickBloxAuthServiceImpl @Inject constructor() : AuthService {
+class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthService {
     override suspend fun signUp(userSignUpRequest: com.awesome.entities.repos.model.UserSignUpRequest): UserDto {
         val user = QBUser()
         user.email = userSignUpRequest.email
@@ -51,11 +52,29 @@ class QuickBloxAuthServiceImpl @Inject constructor() : AuthService {
         }
     }
 
-    override suspend fun logout() :Boolean {
-        return suspendCoroutine {con->
+    override suspend fun logout(): Boolean {
+        return suspendCoroutine { con ->
             QBUsers.signOut().performAsync(object : QBEntityCallback<Void> {
                 override fun onSuccess(aVoid: Void?, bundle: Bundle?) {
                     con.resume(true)
+                }
+
+                override fun onError(exception: QBResponseException?) {
+                    con.resumeWithException(exception!!)
+                }
+            })
+        }
+    }
+
+    override suspend fun isLoggedIn(): Boolean {
+        return QBSessionManager.getInstance().sessionParameters != null
+    }
+
+    override suspend fun destroySession() {
+        return suspendCoroutine { con ->
+            QBAuth.deleteSession().performAsync(object : QBEntityCallback<Void> {
+                override fun onSuccess(aVoid: Void?, bundle: Bundle?) {
+                    con.resume(Unit)
                 }
 
                 override fun onError(exception: QBResponseException?) {

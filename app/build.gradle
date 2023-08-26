@@ -90,4 +90,6 @@ dependencies {
     DependencyProject.quickBloxSdk.forEach(dep->
             implementation(dep)
     )
+
+    implementation (DependencyProject.data_store)
 }

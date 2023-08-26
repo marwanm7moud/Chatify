@@ -4,12 +4,15 @@ import com.awesome.entities.UserEntity
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.repository.RemoteDataSource
 import com.awesome.entities.repos.model.UserSignUpRequest
+import com.awesome.repository.LocalDataSource
 import com.awesome.repository.repos.toUserEntity
 import com.awesome.repository.utils.Validator
+import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
-    private val remoteDataSource: RemoteDataSource
+    private val remoteDataSource: RemoteDataSource,
+    private val localDataSource: LocalDataSource
 ) : AuthRepository {
     override suspend fun signUp(userSignUpRequest: UserSignUpRequest): UserEntity {
         Validator(
@@ -33,4 +36,15 @@ class AuthRepositoryImpl @Inject constructor(
         return remoteDataSource.logout()
     }
 
+    override suspend fun destroySession(){
+        remoteDataSource.destroySession()
+    }
+
+    override suspend fun manageLoginState(isLogin: Boolean) {
+        localDataSource.setLoginStatus(isLogin)
+    }
+
+    override fun getLoginState() : Flow<Boolean> {
+        return localDataSource.getLoginState()
+    }
 }
