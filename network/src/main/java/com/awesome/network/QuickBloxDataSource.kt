@@ -13,13 +13,15 @@ import com.awesome.entities.utils.ServerException
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import com.awesome.network.chat.QuickBloxChatService
+import com.awesome.network.search.QuickBloxSearchService
 import com.quickblox.core.exception.QBResponseException
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
 class QuickBloxDataSource @Inject constructor(
     private val authService: QuickBloxAuthService,
-    private val chatRepository: QuickBloxChatService
+    private val chatRepository: QuickBloxChatService,
+    private val searchService: QuickBloxSearchService,
 ) : RemoteDataSource {
     override suspend fun signUp(userSignUpRequest: UserSignUpRequest): UserDto {
         return wrapApi { authService.signUp(userSignUpRequest) }
@@ -51,5 +53,9 @@ class QuickBloxDataSource @Inject constructor(
 
     override fun disconnectFromChatServer() {
         return chatRepository.disconnectFromChatServer()
+    }
+
+    override suspend fun searchUserByLoginOrFullName(searchValue: String): Flow<List<UserDto>> {
+        return searchService.searchUserByLoginOrFullName(searchValue)
     }
 }

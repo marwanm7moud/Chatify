@@ -21,4 +21,6 @@ interface RemoteDataSource {
     suspend fun connectToChatServer()
     fun subscribeToConnectionState(): Flow<String>
     fun disconnectFromChatServer()
+   suspend fun searchUserByLoginOrFullName(searchValue:String) : Flow<List<UserDto>>
+
 }
