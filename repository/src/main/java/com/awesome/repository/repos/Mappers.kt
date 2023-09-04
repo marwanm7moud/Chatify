@@ -7,5 +7,7 @@ fun UserDto.toUserEntity() = UserEntity(
     id = id ?:0,
     email = email ?:"",
     password = password?:"",
-    login = login ?:""
+    username = login ?:"",
+    fullName = fullName?:"",
 )
+fun List<UserDto>.toUserEntity() = map { it.toUserEntity() }

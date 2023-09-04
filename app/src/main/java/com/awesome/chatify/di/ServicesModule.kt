@@ -4,6 +4,8 @@ import com.awesome.network.auth.QuickBloxAuthService
 import com.awesome.network.auth.QuickBloxQuickBloxAuthServiceImpl
 import com.awesome.network.chat.QuickBloxChatService
 import com.awesome.network.chat.QuickBloxChatServiceImpl
+import com.awesome.network.search.QuickBloxSearchService
+import com.awesome.network.search.QuickBloxSearchServiceImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -19,4 +21,6 @@ abstract class ServicesModule {
     @Binds
     abstract fun provideChatService(quickBloxChatServiceImpl: QuickBloxChatServiceImpl):QuickBloxChatService
 
+    @Binds
+    abstract fun provideSearchService(quickBloxSearchServiceImpl: QuickBloxSearchServiceImpl): QuickBloxSearchService
 }

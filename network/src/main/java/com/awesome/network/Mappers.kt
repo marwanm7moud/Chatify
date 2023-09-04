@@ -16,3 +16,5 @@ fun QBUser.toUserDto() = UserDto(
     twitterId = twitterId,
     twitterDigitsId = twitterDigitsId
 )
+
+fun List<QBUser>.toUserDto() : List<UserDto> = this.map { it.toUserDto() }
