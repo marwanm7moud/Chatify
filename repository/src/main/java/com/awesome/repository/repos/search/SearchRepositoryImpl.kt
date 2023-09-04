@@ -13,7 +13,7 @@ import javax.inject.Inject
 class SearchRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ) : SearchRepository {
-    override suspend fun searchUserByLoginOrFullName(searchValue: String): Flow<List<UserEntity>> {
-        return remoteDataSource.searchUserByLoginOrFullName(searchValue).map { it.toUserEntity() }
+    override suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserEntity> {
+        return remoteDataSource.searchUserByLoginOrFullName(searchValue).toUserEntity()
     }
 }

@@ -20,18 +20,22 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel<HomeUiState, HomeEvents>(HomeUiState()), HomeInteractions {
     init {
         isLoggedIn()
-        connectToChatServer()
-        connectionState()
     }
 
     private fun isLoggedIn() {
-        collectFlow(authRepository.getLoginState()){loginState->
-            if (!loginState)sendEvent(HomeEvents.NavigateToLoginScreen)
+        collectFlow(authRepository.getLoginState()) { loginState ->
+            if (!loginState) {
+                sendEvent(HomeEvents.NavigateToLoginScreen)
+            }
+            else {
+                connectToChatServer()
+                connectionState()
+            }
         }
     }
 
     private fun connectionState() {
-        collectFlow(chatRepository.subscribeToConnectionState()){connectionState->
+        collectFlow(chatRepository.subscribeToConnectionState()) { connectionState ->
             _state.update { it.copy(connectionState = connectionState) }
         }
     }
@@ -52,6 +56,7 @@ class HomeViewModel @Inject constructor(
             }
         }
     }
+
     private fun isSuccessNullReturn(unit: Unit) {}
     override fun onSessionExpiredConfirm() {
         viewModelScope.launch {

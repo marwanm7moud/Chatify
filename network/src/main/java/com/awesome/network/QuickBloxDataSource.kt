@@ -55,7 +55,7 @@ class QuickBloxDataSource @Inject constructor(
         return chatRepository.disconnectFromChatServer()
     }
 
-    override suspend fun searchUserByLoginOrFullName(searchValue: String): Flow<List<UserDto>> {
+    override suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserDto> {
         return searchService.searchUserByLoginOrFullName(searchValue)
     }
 }

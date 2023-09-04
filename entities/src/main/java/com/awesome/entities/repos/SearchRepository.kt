@@ -4,5 +4,5 @@ import com.awesome.entities.UserEntity
 import kotlinx.coroutines.flow.Flow
 
 interface SearchRepository {
-    suspend fun searchUserByLoginOrFullName(searchValue: String): Flow<List<UserEntity>>
+    suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserEntity>
 }

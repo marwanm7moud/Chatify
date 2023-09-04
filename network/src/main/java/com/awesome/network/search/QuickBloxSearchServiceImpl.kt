@@ -14,39 +14,41 @@ import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
 import javax.inject.Inject
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 class QuickBloxSearchServiceImpl @Inject constructor(
 
 ) : QuickBloxSearchService {
-    override suspend fun searchUserByLoginOrFullName(searchValue: String): Flow<List<UserDto>> =
-        callbackFlow {
-            val searchOperator = "le"
-            val typeField = "string"
-            val paramFilter = "filter[]"
-            val requestBuilder = QBPagedRequestBuilder()
-            requestBuilder.rules.add(
-                GenericQueryRule(
-                    paramFilter,
-                    "$typeField login $searchOperator $searchValue"
-                )
+    override suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserDto> = suspendCoroutine{cont->
+        //todo fix search
+        val searchOperator = "le"
+        val typeField = "string"
+        val paramFilter = "filter[]"
+        val requestBuilder = QBPagedRequestBuilder()
+        requestBuilder.rules.add(
+            GenericQueryRule(
+                paramFilter,
+                "$typeField login $searchOperator $searchValue"
             )
-            requestBuilder.rules.add(
-                GenericQueryRule(
-                    paramFilter,
-                    "$typeField full_name $searchOperator $searchValue"
-                )
+        )
+        requestBuilder.rules.add(
+            GenericQueryRule(
+                paramFilter,
+                "$typeField full_name $searchOperator $searchValue"
             )
+        )
 
-            QBUsers.getUsers(requestBuilder)
-                .performAsync(object : QBEntityCallback<ArrayList<QBUser>> {
-                    override fun onSuccess(usersList: ArrayList<QBUser>, bundle: Bundle) {
-                        trySend(usersList.toList().toUserDto())
-                    }
+        QBUsers.getUsers(requestBuilder)
+            .performAsync(object : QBEntityCallback<ArrayList<QBUser>> {
+                override fun onSuccess(usersList: ArrayList<QBUser>, bundle: Bundle) {
+                    cont.resume(usersList.toUserDto())
+                }
 
-                    override fun onError(exception: QBResponseException) {
-                        throw exception
-                    }
-                })
-            awaitClose { }
-        }
+                override fun onError(exception: QBResponseException) {
+                    cont.resumeWithException(exception)
+                }
+            })
+    }
 }
