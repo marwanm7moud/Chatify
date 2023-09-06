@@ -3,6 +3,7 @@ package com.awesome.chatify.di
 import com.quickblox.auth.session.QBSessionManager
 import com.quickblox.auth.session.QBSessionParameters
 import com.quickblox.chat.QBChatService
+import com.quickblox.chat.QBRestChatService
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
