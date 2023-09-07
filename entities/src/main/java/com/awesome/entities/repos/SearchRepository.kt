@@ -1,8 +1,7 @@
 package com.awesome.entities.repos
 
-import com.awesome.entities.UserEntity
-import kotlinx.coroutines.flow.Flow
+import com.awesome.entities.User
 
 interface SearchRepository {
-    suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserEntity>
+    suspend fun searchUserByLoginOrFullName(searchValue: String): List<User>
 }

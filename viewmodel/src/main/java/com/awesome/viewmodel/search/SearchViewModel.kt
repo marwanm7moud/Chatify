@@ -1,16 +1,11 @@
 package com.awesome.viewmodel.search
 
 import android.util.Log
-import androidx.lifecycle.viewModelScope
-import com.awesome.entities.UserEntity
+import com.awesome.entities.User
 import com.awesome.entities.repos.SearchRepository
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.update
-import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
@@ -33,7 +28,7 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    private fun onSearchSuccess(users: List<UserEntity>) {
+    private fun onSearchSuccess(users: List<User>) {
         _state.update { it.copy(isLoading = false, users = users.toUserUiState()) }
         Log.e("TAG", "onSearchSuccess: GG")
     }

@@ -1,6 +1,6 @@
 package com.awesome.viewmodel.search
 
-import com.awesome.entities.UserEntity
+import com.awesome.entities.User
 
 data class SearchUiState(
     val searchInput: String = "",
@@ -14,10 +14,10 @@ data class UserUiState(
     val image: String = "",
 )
 
-fun UserEntity.toUserUiState() = UserUiState(
+fun User.toUserUiState() = UserUiState(
     fullName = fullName,
     username = username,
     image = "" //todo we need to get images
 )
 
-fun List<UserEntity>.toUserUiState() = map{it.toUserUiState()}
+fun List<User>.toUserUiState() = map{it.toUserUiState()}

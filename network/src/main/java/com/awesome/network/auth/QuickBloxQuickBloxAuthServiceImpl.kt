@@ -1,7 +1,7 @@
 package com.awesome.network.auth
 
 import android.os.Bundle
-import com.awesome.network.toUserDto
+import com.awesome.network.toEntity
 import com.awesome.repository.response.UserDto
 import com.quickblox.auth.QBAuth
 import com.quickblox.auth.session.QBSessionManager
@@ -25,7 +25,7 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
         return suspendCoroutine { cont ->
             QBUsers.signUp(user).performAsync(object : QBEntityCallback<QBUser> {
                 override fun onSuccess(user: QBUser?, bundle: Bundle?) {
-                    cont.resume(user?.toUserDto()!!)
+                    cont.resume(user?.toEntity()!!)
                 }
 
                 override fun onError(exception: QBResponseException?) {
@@ -42,7 +42,7 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
         return suspendCoroutine { cont ->
             QBUsers.signIn(user).performAsync(object : QBEntityCallback<QBUser> {
                 override fun onSuccess(user: QBUser?, bundle: Bundle?) {
-                    cont.resume(user?.toUserDto()!!)
+                    cont.resume(user?.toEntity()!!)
                 }
 
                 override fun onError(exception: QBResponseException?) {
