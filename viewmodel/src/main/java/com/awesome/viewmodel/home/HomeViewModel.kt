@@ -1,5 +1,6 @@
 package com.awesome.viewmodel.home
 
+import android.util.Log
 import androidx.lifecycle.viewModelScope
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.ChatRepository
@@ -7,6 +8,7 @@ import com.awesome.entities.repos.ServiceRepository
 import com.awesome.entities.utils.UpdatedOrDeletedUserException
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -21,14 +23,22 @@ class HomeViewModel @Inject constructor(
         isLoggedIn()
     }
 
+    private fun getAllChats(){
+        viewModelScope.launch {
+            chatRepository.getAllChats().collectLatest {chats->
+                _state.update { it.copy(chats = chats.map { it.toState() } ) }
+                Log.e("TAG", "getAllChats: $chats", )
+            }
+        }
+    }
+
     private fun isLoggedIn() {
         collectFlow(authRepository.getLoginState()) { loginState ->
             if (!loginState) {
                 sendEvent(HomeEvents.NavigateToLoginScreen)
             }
             else {
-                connectToChatServer()
-                connectionState()
+                connectToChatServer().also { connectionState().also { getAllChats()} }
             }
         }
     }

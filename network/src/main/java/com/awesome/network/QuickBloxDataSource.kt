@@ -1,5 +1,6 @@
 package com.awesome.network
 
+import com.awesome.entities.Chat
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.network.auth.QuickBloxAuthService
 import com.awesome.network.chat.QuickBloxChatService
@@ -62,5 +63,9 @@ class QuickBloxDataSource @Inject constructor(
         membersId: ArrayList<Int>
     ) {
         return wrapApi { chatService.createGroupChat(chatName , chatPhoto , membersId) }
+    }
+
+    override fun getAllChats(): Flow<List<Chat>> {
+        return chatService.getAllChats()
     }
 }

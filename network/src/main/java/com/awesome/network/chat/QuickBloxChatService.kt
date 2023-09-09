@@ -11,5 +11,5 @@ interface QuickBloxChatService {
         chatPhoto:String?,
         membersId:ArrayList<Int>,
     )
-    suspend fun getAllChats(): Flow<List<Chat>>
+    fun getAllChats(): Flow<List<Chat>>
 }

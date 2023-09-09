@@ -7,6 +7,7 @@ import com.quickblox.chat.model.QBChatDialog
 import com.quickblox.chat.model.QBDialogType
 import com.quickblox.users.model.QBUser
 
+@JvmName("QBUserToEntity")
 fun QBUser.toEntity() = UserDto(
     id = id,
     fullName = fullName,
@@ -21,8 +22,10 @@ fun QBUser.toEntity() = UserDto(
     twitterDigitsId = twitterDigitsId
 )
 
+@JvmName("listQBUserToEntity")
 fun List<QBUser>.toEntity() : List<UserDto> = this.map { it.toEntity() }
 
+@JvmName("dialogTypeToEntity")
 fun QBDialogType.toEntity() : ChatType{
     return when(this){
         QBDialogType.PUBLIC_GROUP -> ChatType.PUBLIC_GROUP
@@ -31,6 +34,7 @@ fun QBDialogType.toEntity() : ChatType{
     }
 }
 
+@JvmName("chatDialogToEntity")
 fun QBChatDialog.toEntity() = Chat(
     dialogId = dialogId,
     name = name,
@@ -41,4 +45,6 @@ fun QBChatDialog.toEntity() = Chat(
     membersIds = occupants,
     type = type.toEntity()
 )
+
+@JvmName("listQBChatDialogToEntity")
 fun List<QBChatDialog>.toEntity() : List<Chat> = this.map { it.toEntity() }

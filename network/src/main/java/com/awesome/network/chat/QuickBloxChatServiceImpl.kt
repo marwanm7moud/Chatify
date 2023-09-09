@@ -59,7 +59,7 @@ class QuickBloxChatServiceImpl @Inject constructor(
         }
     }
 
-    override suspend fun getAllChats(): Flow<List<Chat>> {
+    override fun getAllChats(): Flow<List<Chat>> {
         val requestBuilder = QBRequestGetBuilder()
         requestBuilder.limit = 50
         requestBuilder.skip = 0

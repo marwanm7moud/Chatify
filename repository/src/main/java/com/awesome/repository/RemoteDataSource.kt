@@ -1,5 +1,6 @@
 package com.awesome.repository
 
+import com.awesome.entities.Chat
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.repository.response.UserDto
 import kotlinx.coroutines.flow.Flow
@@ -29,5 +30,6 @@ interface RemoteDataSource {
         chatPhoto:String?,
         membersId:ArrayList<Int>,
     )
+     fun getAllChats(): Flow<List<Chat>>
 
 }
