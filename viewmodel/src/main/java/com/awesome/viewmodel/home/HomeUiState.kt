@@ -13,14 +13,13 @@ data class HomeUiState(
 )
 
 data class ChatUiState(
-    val dialogId: String,
-    val name: String,
-    val Image: String,
-    val lastMessage: String,
-    val lastMessageDateSent: Long,
-    val unreadMessageCount: Int,
-    val membersIds: List<Int>,
-    val type: ChatType
+    val dialogId: String = "",
+    val name: String = "marwan",
+    val Image: String = "",
+    val lastMessage: String ="gikfjg",
+    val lastMessageDateSent: Long = 313215,
+    val unreadMessageCount: Int = 2,
+    val membersIds: List<Int> = emptyList(),
 )
 
 fun Chat.toState() = ChatUiState(
@@ -31,5 +30,4 @@ fun Chat.toState() = ChatUiState(
     lastMessageDateSent,
     unreadMessageCount,
     membersIds,
-    type
 )
