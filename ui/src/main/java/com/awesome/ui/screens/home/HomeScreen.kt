@@ -19,6 +19,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -73,7 +74,7 @@ fun HomeContent(state: HomeUiState, interactions: HomeInteractions) {
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(text = state.connectionState) },
+                title = { Text(text = state.connectionState , color = Color.Black) },
                 actions = {
                     IconButton(onClick = interactions::onSearchIconClicked) {
                         Icon(

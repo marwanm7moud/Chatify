@@ -4,6 +4,7 @@ import com.quickblox.auth.session.QBSessionManager
 import com.quickblox.auth.session.QBSessionParameters
 import com.quickblox.chat.QBChatService
 import com.quickblox.chat.QBRestChatService
+import com.quickblox.chat.QBRoster
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -25,4 +26,9 @@ class QuickBloxModule {
     fun provideQBChatService(): QBChatService {
         return QBChatService.getInstance()
     }
+
+    @Provides
+    @Singleton
+    fun provideQbChatRoster() : QBRoster = QBChatService.getInstance().roster
+
 }
