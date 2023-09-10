@@ -19,7 +19,8 @@ fun QBUser.toEntity() = UserDto(
     externalId = externalId,
     facebookId = facebookId,
     twitterId = twitterId,
-    twitterDigitsId = twitterDigitsId
+    twitterDigitsId = twitterDigitsId,
+    imageId = fileId
 )
 
 @JvmName("listQBUserToEntity")

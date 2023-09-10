@@ -30,6 +30,6 @@ class SearchViewModel @Inject constructor(
 
     private fun onSearchSuccess(users: List<User>) {
         _state.update { it.copy(isLoading = false, users = users.toUserUiState()) }
-        Log.e("TAG", "onSearchSuccess: GG")
+        Log.e("TAG", "onSearchSuccess: $users")
     }
 }

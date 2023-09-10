@@ -4,6 +4,7 @@ import com.awesome.entities.Chat
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.repository.response.UserDto
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
 
 interface RemoteDataSource {
     suspend fun signUp(
@@ -31,5 +32,7 @@ interface RemoteDataSource {
         membersId:ArrayList<Int>,
     )
      fun getAllChats(): Flow<List<Chat>>
+    suspend fun getUserImage(userAvatarId:Int): InputStream?
+
 
 }

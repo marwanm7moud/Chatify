@@ -3,6 +3,7 @@ package com.awesome.entities.repos
 import com.awesome.entities.User
 import com.awesome.entities.repos.model.UserSignUpRequest
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
 
 interface AuthRepository {
     suspend fun signUp(
@@ -18,4 +19,6 @@ interface AuthRepository {
     suspend fun destroySession()
     suspend fun manageLoginState(isLogin:Boolean)
     fun getLoginState(): Flow<Boolean>
+    suspend fun getUserImage(userAvatarId:Int): InputStream?
+
 }

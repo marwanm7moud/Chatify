@@ -14,6 +14,7 @@ data class UserDto(
     var facebookId: String? = null,
     var twitterId: String? = null,
     var twitterDigitsId: String? = null,
+    var imageId: Int? = null,
     var blobId: Int? = null,
     var tags: String? = null,
     var password: String? = null,

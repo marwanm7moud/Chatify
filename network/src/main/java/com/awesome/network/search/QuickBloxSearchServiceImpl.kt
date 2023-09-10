@@ -3,6 +3,7 @@ package com.awesome.network.search
 import android.os.Bundle
 import com.awesome.network.toEntity
 import com.awesome.repository.response.UserDto
+import com.quickblox.content.model.QBFile
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
 import com.quickblox.core.request.GenericQueryRule
@@ -27,12 +28,6 @@ class QuickBloxSearchServiceImpl @Inject constructor(
             GenericQueryRule(
                 paramFilter,
                 "$typeField login $searchOperator $searchValue"
-            )
-        )
-        requestBuilder.rules.add(
-            GenericQueryRule(
-                paramFilter,
-                "$typeField full_name $searchOperator $searchValue"
             )
         )
 

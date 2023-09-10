@@ -9,6 +9,7 @@ import com.awesome.repository.response.UserDto
 import com.awesome.network.service.QuickBloxService
 import com.awesome.network.search.QuickBloxSearchService
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
 import javax.inject.Inject
 
 class QuickBloxDataSource @Inject constructor(
@@ -30,18 +31,18 @@ class QuickBloxDataSource @Inject constructor(
     }
 
     override suspend fun isLoggedIn(): Boolean {
-        return wrapApi { authService.isLoggedIn()}
+        return wrapApi { authService.isLoggedIn() }
     }
 
     override suspend fun destroySession() {
-        return wrapApi { authService.destroySession()}
+        return wrapApi { authService.destroySession() }
     }
 
     override suspend fun connectToChatServer() {
-        return wrapApi { qbService.connectToChatServer()}
+        return wrapApi { qbService.connectToChatServer() }
     }
 
-    override  fun subscribeToConnectionState(): Flow<String> {
+    override fun subscribeToConnectionState(): Flow<String> {
         return qbService.subscribeToConnectionState()
     }
 
@@ -62,10 +63,14 @@ class QuickBloxDataSource @Inject constructor(
         chatPhoto: String?,
         membersId: ArrayList<Int>
     ) {
-        return wrapApi { chatService.createGroupChat(chatName , chatPhoto , membersId) }
+        return wrapApi { chatService.createGroupChat(chatName, chatPhoto, membersId) }
     }
 
     override fun getAllChats(): Flow<List<Chat>> {
         return chatService.getAllChats()
+    }
+
+    override suspend fun getUserImage(userAvatarId: Int): InputStream? {
+        return wrapApi { authService.getUserImage(userAvatarId) }
     }
 }

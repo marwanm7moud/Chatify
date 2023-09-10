@@ -8,6 +8,7 @@ import com.awesome.repository.LocalDataSource
 import com.awesome.repository.repos.toUserEntity
 import com.awesome.repository.utils.Validator
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
 import javax.inject.Inject
 
 class AuthRepositoryImpl @Inject constructor(
@@ -46,5 +47,9 @@ class AuthRepositoryImpl @Inject constructor(
 
     override fun getLoginState() : Flow<Boolean> {
         return localDataSource.getLoginState()
+    }
+
+    override suspend fun getUserImage(userAvatarId: Int): InputStream? {
+        return remoteDataSource.getUserImage(userAvatarId)
     }
 }
