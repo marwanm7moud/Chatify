@@ -38,12 +38,12 @@ fun QBDialogType.toEntity() : ChatType{
 @JvmName("chatDialogToEntity")
 fun QBChatDialog.toEntity() = Chat(
     dialogId = dialogId,
-    name = name,
-    Image = photo,
-    lastMessage = lastMessage,
-    lastMessageDateSent = lastMessageDateSent,
-    unreadMessageCount = unreadMessageCount,
-    membersIds = occupants,
+    name = name?: "",
+    Image = photo ?: "",
+    lastMessage = lastMessage?: "",
+    lastMessageDateSent = lastMessageDateSent?: 0,
+    unreadMessageCount = unreadMessageCount?: 0,
+    membersIds = occupants?: emptyList(),
     type = type.toEntity()
 )
 

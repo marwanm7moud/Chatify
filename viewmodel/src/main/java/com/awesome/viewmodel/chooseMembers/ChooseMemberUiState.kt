@@ -7,5 +7,5 @@ data class ChooseMemberUiState(
     val error: String = "",
     val searchInput: String = "",
     val users: List<UserUiState> = emptyList(),
-    val selectedUserId: Int = 0,
+    val selectedUser: UserUiState = UserUiState(),
 )
