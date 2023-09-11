@@ -2,6 +2,7 @@ package com.awesome.viewmodel.search
 
 import android.util.Log
 import com.awesome.entities.User
+import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.SearchRepository
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -10,7 +11,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository
+    private val searchRepository: SearchRepository,
+    private val authRepository: AuthRepository
 ) : BaseViewModel<SearchUiState, SearchEvents>(SearchUiState()), SearchInteractions {
 
 
@@ -29,7 +31,9 @@ class SearchViewModel @Inject constructor(
 
 
     private fun onSearchSuccess(users: List<User>) {
-        _state.update { it.copy(isLoading = false, users = users.toUserUiState()) }
-        Log.e("TAG", "onSearchSuccess: $users")
+        _state.update { it.copy(
+            isLoading = false,
+            users = users.toUserUiState()) }
+        Log.e("TAG", "onSearchSuccess:$users ", )
     }
 }

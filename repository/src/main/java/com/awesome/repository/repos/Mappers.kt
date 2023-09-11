@@ -9,5 +9,6 @@ fun UserDto.toUserEntity() = User(
     password = password?:"",
     username = login ?:"",
     fullName = fullName?:"",
+    avatarId = imageId ?: 0
 )
 fun List<UserDto>.toUserEntity() = map { it.toUserEntity() }
