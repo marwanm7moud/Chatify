@@ -21,6 +21,9 @@ class HomeViewModel @Inject constructor(
 ) : BaseViewModel<HomeUiState, HomeEvents>(HomeUiState()), HomeInteractions {
     init {
         isLoggedIn()
+        connectToChatServer()
+        connectionState()
+        getAllChats()
     }
 
     private fun getAllChats(){
@@ -38,7 +41,7 @@ class HomeViewModel @Inject constructor(
                 sendEvent(HomeEvents.NavigateToLoginScreen)
             }
             else {
-                connectToChatServer().also { connectionState().also { getAllChats()} }
+
             }
         }
     }
