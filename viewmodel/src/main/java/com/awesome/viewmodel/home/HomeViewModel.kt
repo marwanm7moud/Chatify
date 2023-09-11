@@ -77,4 +77,8 @@ class HomeViewModel @Inject constructor(
     override fun onSearchIconClicked() {
         sendEvent(HomeEvents.NavigateToSearchScreen)
     }
+
+    override fun onNewChatClicked() {
+        sendEvent(HomeEvents.NavigateToChooseMember)
+    }
 }

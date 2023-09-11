@@ -28,6 +28,7 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.awesome.ui.R
 import com.awesome.ui.composables.Chat
+import com.awesome.ui.screens.chooseMember.navigateToChooseMember
 import com.awesome.ui.screens.login.navigateToLogin
 import com.awesome.ui.screens.search.navigateToSearch
 import com.awesome.viewmodel.home.HomeEvents
@@ -37,7 +38,6 @@ import com.awesome.viewmodel.home.HomeViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.flow.collectLatest
 
-@OptIn(ExperimentalCoroutinesApi::class)
 @Composable
 fun HomeScreen(
     navController: NavController,
@@ -50,6 +50,7 @@ fun HomeScreen(
             when (it) {
                 HomeEvents.NavigateToLoginScreen -> navController.navigateToLogin()
                 HomeEvents.NavigateToSearchScreen -> navController.navigateToSearch()
+                HomeEvents.NavigateToChooseMember -> navController.navigateToChooseMember()
                 else -> {}
             }
         }
@@ -87,7 +88,7 @@ fun HomeContent(state: HomeUiState, interactions: HomeInteractions) {
             )
         },
         floatingActionButton = {
-            FloatingActionButton(onClick = { /*TODO*/ }) {
+            FloatingActionButton(onClick = interactions::onNewChatClicked) {
                 Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription ="" )
             }
         }
