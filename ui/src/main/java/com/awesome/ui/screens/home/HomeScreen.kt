@@ -8,6 +8,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FloatingActionButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
@@ -84,6 +85,11 @@ fun HomeContent(state: HomeUiState, interactions: HomeInteractions) {
                     }
                 }
             )
+        },
+        floatingActionButton = {
+            FloatingActionButton(onClick = { /*TODO*/ }) {
+                Icon(painter = painterResource(id = R.drawable.baseline_add_24), contentDescription ="" )
+            }
         }
     ) {
         LazyColumn(modifier = Modifier.padding(it)) {

@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavController
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
+import com.awesome.ui.screens.chooseMember.chooseMemberRoute
 import com.awesome.ui.screens.home.homeRoute
 import com.awesome.ui.screens.login.loginRoute
 import com.awesome.ui.screens.search.searchRoute
@@ -16,5 +17,6 @@ fun MainNavHost(navController: NavHostController) {
         signUpRoute(navController)
         homeRoute(navController)
         searchRoute(navController)
+        chooseMemberRoute(navController)
     }
 }

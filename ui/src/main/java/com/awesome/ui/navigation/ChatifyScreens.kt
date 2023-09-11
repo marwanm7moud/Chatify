@@ -5,4 +5,5 @@ sealed class ChatifyScreens(val route:String){
     object SignUp : ChatifyScreens("sign_up_screen")
     object Home : ChatifyScreens("home_screen")
     object Search : ChatifyScreens("search_screen")
+    object ChooseMember : ChatifyScreens("choose_member_screen")
 }
