@@ -1,12 +1,11 @@
 package com.awesome.viewmodel.login
 
 import androidx.lifecycle.viewModelScope
-import com.awesome.entities.UserEntity
+import com.awesome.entities.User
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
 import com.awesome.viewmodel.BaseViewModel
-import com.awesome.viewmodel.signUp.SignUpEvents
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -60,7 +59,7 @@ class LoginViewModel @Inject constructor(
         }
     }
 
-    private fun onLoginSuccess(userEntity: UserEntity) {
+    private fun onLoginSuccess(user: User) {
         viewModelScope.launch{
             _state.update { it.copy(isLoading = false) }
             authRepository.manageLoginState(true)

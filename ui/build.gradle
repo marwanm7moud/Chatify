@@ -58,6 +58,8 @@ dependencies {
     implementation (DependencyProject.ui_graphics)
     implementation (DependencyProject.preview)
     implementation (DependencyProject.material)
+    implementation (DependencyProject.constraint_layout)
+    implementation (DependencyProject.coil)
     testImplementation (DependencyProject.junit)
     androidTestImplementation (DependencyProject.test)
     androidTestImplementation (DependencyProject.espresso)

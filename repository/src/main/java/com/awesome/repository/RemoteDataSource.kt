@@ -1,8 +1,10 @@
 package com.awesome.repository
 
+import com.awesome.entities.Chat
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.repository.response.UserDto
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
 
 interface RemoteDataSource {
     suspend fun signUp(
@@ -22,5 +24,15 @@ interface RemoteDataSource {
     fun subscribeToConnectionState(): Flow<String>
     fun disconnectFromChatServer()
    suspend fun searchUserByLoginOrFullName(searchValue:String) : List<UserDto>
+
+    suspend fun createPrivateChat(secondUserId:Int)
+    suspend fun createGroupChat(
+        chatName:String,
+        chatPhoto:String?,
+        membersId:ArrayList<Int>,
+    )
+     fun getAllChats(): Flow<List<Chat>>
+    suspend fun getUserImage(userAvatarId:Int): InputStream?
+
 
 }

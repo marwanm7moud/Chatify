@@ -1,14 +1,17 @@
 package com.awesome.network.auth
 
 import android.os.Bundle
-import com.awesome.network.toUserDto
+import com.awesome.entities.utils.NullDataException
+import com.awesome.network.toEntity
 import com.awesome.repository.response.UserDto
 import com.quickblox.auth.QBAuth
 import com.quickblox.auth.session.QBSessionManager
+import com.quickblox.content.QBContent
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
 import com.quickblox.users.QBUsers
 import com.quickblox.users.model.QBUser
+import java.io.InputStream
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
@@ -25,7 +28,7 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
         return suspendCoroutine { cont ->
             QBUsers.signUp(user).performAsync(object : QBEntityCallback<QBUser> {
                 override fun onSuccess(user: QBUser?, bundle: Bundle?) {
-                    cont.resume(user?.toUserDto()!!)
+                    cont.resume(user?.toEntity()!!)
                 }
 
                 override fun onError(exception: QBResponseException?) {
@@ -42,7 +45,7 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
         return suspendCoroutine { cont ->
             QBUsers.signIn(user).performAsync(object : QBEntityCallback<QBUser> {
                 override fun onSuccess(user: QBUser?, bundle: Bundle?) {
-                    cont.resume(user?.toUserDto()!!)
+                    cont.resume(user?.toEntity()!!)
                 }
 
                 override fun onError(exception: QBResponseException?) {
@@ -82,5 +85,19 @@ class QuickBloxQuickBloxAuthServiceImpl @Inject constructor() : QuickBloxAuthSer
                 }
             })
         }
+    }
+
+    override suspend fun getUserImage(userAvatarId:Int): InputStream? {
+       return suspendCoroutine {cont->
+           QBContent.downloadFileById(userAvatarId) {}.performAsync(object : QBEntityCallback<InputStream> {
+               override fun onSuccess(inputStream: InputStream?, bundle: Bundle?) {
+                       cont.resume(inputStream)
+               }
+
+               override fun onError(exception: QBResponseException?) {
+                   cont.resumeWithException(exception!!)
+               }
+           })
+       }
     }
 }

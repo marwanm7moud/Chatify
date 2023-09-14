@@ -1,3 +1,8 @@
+import Versions.COIL_VERSION
+import Versions.CONSTRAIN_LAYOUT_VERSION
+import Versions.LOTTIE_VERSION
+import Versions.SPLASH_SCREEN_VERSION
+
 object Versions {
     const val CORE_VERSION = "1.8.0"
     const val APPCOMPAT_VERSION = "1.6.1"
@@ -13,6 +18,12 @@ object Versions {
     const val NAVIGATION_VERSION = "2.5.3"
     const val DATASTORE_VERSION = "1.0.0-beta01"
     const val COROUTINES_VERSION = "1.3.9"
+    const val CONSTRAIN_LAYOUT_VERSION = "1.0.1"
+    const val LOTTIE_VERSION = "6.0.1"
+    const val COIL_VERSION = "2.4.0"
+    const val SPLASH_SCREEN_VERSION = "1.0.0-beta02"
+
+
 }
 
 object DependencyProject {
@@ -31,6 +42,8 @@ object DependencyProject {
     const val ui_test = "androidx.compose.ui:ui-test-junit4"
     const val ui_tooling = "androidx.compose.ui:ui-tooling"
     const val test_manifest = "androidx.compose.ui:ui-test-manifest"
+    const val constraint_layout = "androidx.constraintlayout:constraintlayout-compose:$CONSTRAIN_LAYOUT_VERSION"
+
 
     const val hilt = "com.google.dagger:hilt-android:${Versions.HILT_VERSION}"
     const val hilt_compiler = "com.google.dagger:hilt-android-compiler:${Versions.HILT_VERSION}"
@@ -41,6 +54,12 @@ object DependencyProject {
     const val data_store = "androidx.datastore:datastore-preferences:${Versions.DATASTORE_VERSION}"
 
     const val coroutines = "org.jetbrains.kotlinx:kotlinx-coroutines-android:${Versions.COROUTINES_VERSION}"
+
+    const val lottie = "com.airbnb.android:lottie-compose:$LOTTIE_VERSION"
+
+    const val coil = "io.coil-kt:coil-compose:$COIL_VERSION"
+    const val splashScreen = "androidx.core:core-splashscreen:$SPLASH_SCREEN_VERSION"
+
 
     @JvmField
     val quickBloxSdk = listOf(

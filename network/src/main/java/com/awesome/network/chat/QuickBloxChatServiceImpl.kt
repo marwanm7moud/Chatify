@@ -1,93 +1,83 @@
 package com.awesome.network.chat
 
 import android.os.Bundle
-import android.util.Log
-import com.quickblox.auth.session.QBSessionParameters
-import com.quickblox.chat.QBChatService
+import com.awesome.entities.Chat
+import com.awesome.network.toEntity
+import com.quickblox.chat.QBRestChatService
+import com.quickblox.chat.model.QBChatDialog
+import com.quickblox.chat.model.QBDialogType
+import com.quickblox.chat.utils.DialogUtils
 import com.quickblox.core.QBEntityCallback
 import com.quickblox.core.exception.QBResponseException
-import com.quickblox.users.model.QBUser
+import com.quickblox.core.request.QBRequestGetBuilder
 import kotlinx.coroutines.channels.awaitClose
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
-import kotlinx.coroutines.flow.flow
-import org.jivesoftware.smack.ConnectionListener
-import org.jivesoftware.smack.XMPPConnection
 import javax.inject.Inject
 import kotlin.coroutines.resume
 import kotlin.coroutines.resumeWithException
 import kotlin.coroutines.suspendCoroutine
 
+
 class QuickBloxChatServiceImpl @Inject constructor(
-    private val sessionParameters: QBSessionParameters?,
-    private val qbChatService: QBChatService
+
 ) : QuickBloxChatService {
-    override suspend fun connectToChatServer() {
-        val user = QBUser()
-        user.id = sessionParameters?.userId
-        user.password = sessionParameters?.userPassword
+    override suspend fun createPrivateChat(secondUserId: Int) {
+        val dialog = DialogUtils.buildPrivateDialog(secondUserId)
         return suspendCoroutine { cont ->
-            qbChatService.login(user, object : QBEntityCallback<Void> {
-                override fun onSuccess(aVoid: Void?, bundle: Bundle?) {
-                    cont.resume(Unit)
-                }
+            QBRestChatService.createChatDialog(dialog)
+                .performAsync(object : QBEntityCallback<QBChatDialog> {
+                    override fun onSuccess(result: QBChatDialog?, bundle: Bundle?) {
+                        cont.resume(Unit)
+                    }
 
-                override fun onError(exception: QBResponseException?) {
-                    cont.resumeWithException(exception!!)
-                }
-            })
+                    override fun onError(exception: QBResponseException?) {
+                        cont.resumeWithException(exception!!)
+                    }
+                })
         }
     }
 
-    override fun subscribeToConnectionState(): Flow<String> = callbackFlow {
-        val connectionListener = object : ConnectionListener {
-            override fun connected(connection: XMPPConnection) {
-                trySend("connected")
-            }
+    override suspend fun createGroupChat(
+        chatName: String,
+        chatPhoto: String?,
+        membersId: ArrayList<Int>
+    ) {
+        val dialog = DialogUtils.buildDialog(chatName, QBDialogType.GROUP, membersId)
+        dialog.photo = chatPhoto
+        return suspendCoroutine { cont ->
+            QBRestChatService.createChatDialog(dialog)
+                .performAsync(object : QBEntityCallback<QBChatDialog> {
+                    override fun onSuccess(result: QBChatDialog?, bundle: Bundle?) {
+                        cont.resume(Unit)
+                    }
 
-            override fun authenticated(connection: XMPPConnection, resumed: Boolean) {
-                trySend("authenticated")
-                trySend("connected")
-            }
-
-            override fun connectionClosed() {
-                trySend("connectionClosed")
-            }
-
-            override fun connectionClosedOnError(exception: Exception) {
-                trySend("connectionClosedOnError")
-            }
-
-            override fun reconnectionSuccessful() {
-                trySend("reconnectionSuccessful")
-                trySend("connected")
-            }
-
-            override fun reconnectingIn(seconds: Int) {
-                trySend("reconnecting in $seconds")
-            }
-
-            override fun reconnectionFailed(exception: Exception) {
-                trySend("reconnectionFailed")
-            }
+                    override fun onError(exception: QBResponseException?) {
+                        cont.resumeWithException(exception!!)
+                    }
+                })
         }
-        qbChatService.addConnectionListener(connectionListener)
-        awaitClose { qbChatService.removeConnectionListener(connectionListener) }
     }
 
-    override fun disconnectFromChatServer() {
-        val isLoggedIn = qbChatService.isLoggedIn
-        if (!isLoggedIn) {
-            return
-        }
-        qbChatService.logout(object : QBEntityCallback<Void> {
-            override fun onSuccess(aVoid: Void?, bundle: Bundle?) {
-                qbChatService.destroy()
-            }
+    override fun getAllChats(): Flow<List<Chat>> {
+        val requestBuilder = QBRequestGetBuilder()
+        requestBuilder.limit = 50
+        requestBuilder.skip = 0
+        return callbackFlow {
+            QBRestChatService.getChatDialogs(null, requestBuilder)
+                .performAsync(object : QBEntityCallback<java.util.ArrayList<QBChatDialog?>?> {
+                    override fun onSuccess(result: ArrayList<QBChatDialog?>?, bundle: Bundle) {
+                        val chats: List<Chat> =
+                            result?.toList()?.mapNotNull { it?.toEntity() }.orEmpty()
+                        trySend(chats)
+                    }
 
-            override fun onError(exception: QBResponseException?) {
-            }
-        })
+                    override fun onError(exception: QBResponseException) {
+                        //todo
+                    }
+                })
+
+            awaitClose { }
+        }
     }
 }

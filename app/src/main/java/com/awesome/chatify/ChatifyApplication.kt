@@ -24,5 +24,6 @@ class ChatifyApplication : Application() {
         )
         QBSettings.getInstance().setAccountKey(BuildConfig.ACCOUNT_KEY)
         QBSettings.getInstance().setAutoCreateSession(true)
+        QBSettings.getInstance().isEnablePushNotification = true
     }
 }

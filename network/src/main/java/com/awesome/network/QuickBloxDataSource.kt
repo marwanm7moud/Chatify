@@ -1,27 +1,22 @@
 package com.awesome.network
 
-import android.util.Log
+import com.awesome.entities.Chat
 import com.awesome.entities.repos.model.UserSignUpRequest
-import com.awesome.entities.utils.UpdatedOrDeletedUserException
 import com.awesome.network.auth.QuickBloxAuthService
+import com.awesome.network.chat.QuickBloxChatService
 import com.awesome.repository.RemoteDataSource
 import com.awesome.repository.response.UserDto
-import com.awesome.entities.utils.HttpStatusCode
-import com.awesome.entities.utils.NetworkException
-import com.awesome.entities.utils.NullDataException
-import com.awesome.entities.utils.ServerException
-import com.awesome.entities.utils.UnauthorizedException
-import com.awesome.entities.utils.ValidationException
-import com.awesome.network.chat.QuickBloxChatService
+import com.awesome.network.service.QuickBloxService
 import com.awesome.network.search.QuickBloxSearchService
-import com.quickblox.core.exception.QBResponseException
 import kotlinx.coroutines.flow.Flow
+import java.io.InputStream
 import javax.inject.Inject
 
 class QuickBloxDataSource @Inject constructor(
     private val authService: QuickBloxAuthService,
-    private val chatRepository: QuickBloxChatService,
+    private val qbService: QuickBloxService,
     private val searchService: QuickBloxSearchService,
+    private val chatService: QuickBloxChatService,
 ) : RemoteDataSource {
     override suspend fun signUp(userSignUpRequest: UserSignUpRequest): UserDto {
         return wrapApi { authService.signUp(userSignUpRequest) }
@@ -36,26 +31,46 @@ class QuickBloxDataSource @Inject constructor(
     }
 
     override suspend fun isLoggedIn(): Boolean {
-        return wrapApi { authService.isLoggedIn()}
+        return wrapApi { authService.isLoggedIn() }
     }
 
     override suspend fun destroySession() {
-        return wrapApi { authService.destroySession()}
+        return wrapApi { authService.destroySession() }
     }
 
     override suspend fun connectToChatServer() {
-        return wrapApi { chatRepository.connectToChatServer()}
+        return wrapApi { qbService.connectToChatServer() }
     }
 
-    override  fun subscribeToConnectionState(): Flow<String> {
-        return chatRepository.subscribeToConnectionState()
+    override fun subscribeToConnectionState(): Flow<String> {
+        return qbService.subscribeToConnectionState()
     }
 
     override fun disconnectFromChatServer() {
-        return chatRepository.disconnectFromChatServer()
+        return qbService.disconnectFromChatServer()
     }
 
     override suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserDto> {
         return searchService.searchUserByLoginOrFullName(searchValue)
+    }
+
+    override suspend fun createPrivateChat(secondUserId: Int) {
+        return wrapApi { chatService.createPrivateChat(secondUserId) }
+    }
+
+    override suspend fun createGroupChat(
+        chatName: String,
+        chatPhoto: String?,
+        membersId: ArrayList<Int>
+    ) {
+        return wrapApi { chatService.createGroupChat(chatName, chatPhoto, membersId) }
+    }
+
+    override fun getAllChats(): Flow<List<Chat>> {
+        return chatService.getAllChats()
+    }
+
+    override suspend fun getUserImage(userAvatarId: Int): InputStream? {
+        return wrapApi { authService.getUserImage(userAvatarId) }
     }
 }

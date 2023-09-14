@@ -1,7 +1,7 @@
 package com.awesome.viewmodel.signUp
 
 import androidx.lifecycle.viewModelScope
-import com.awesome.entities.UserEntity
+import com.awesome.entities.User
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.entities.utils.ValidationException
@@ -79,7 +79,7 @@ class SignUpViewModel @Inject constructor(
         }
     }
 
-    private fun onSignUpSuccess(userEntity: UserEntity) {
+    private fun onSignUpSuccess(user: User) {
         viewModelScope.launch{
             _state.update { it.copy(isLoading = false) }
             authRepository.manageLoginState(true)
