@@ -5,6 +5,8 @@ import com.awesome.entities.User
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.utils.UnauthorizedException
 import com.awesome.entities.utils.ValidationException
+import com.awesome.usecase.auth.LoginUseCase
+import com.awesome.usecase.auth.ManageLoginStateUseCase
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class LoginViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val loginUseCase: LoginUseCase,
+    private val manageLoginStateUseCase: ManageLoginStateUseCase
 ) : BaseViewModel<LoginUiState, LoginEvents>(LoginUiState()), LoginInteractions {
     override fun onUsernameChange(username: String) {
         _state.update { it.copy(username = username) }
@@ -26,7 +29,7 @@ class LoginViewModel @Inject constructor(
     override fun onCLickLogin() {
         _state.update { it.copy(isLoading = true) }
         tryToExecute(
-            call = { authRepository.login(state.value.username, state.value.password) },
+            call = { loginUseCase(state.value.username, state.value.password) },
             onSuccess = ::onLoginSuccess,
             onError = ::onLoginError
         )
@@ -62,7 +65,7 @@ class LoginViewModel @Inject constructor(
     private fun onLoginSuccess(user: User) {
         viewModelScope.launch{
             _state.update { it.copy(isLoading = false) }
-            authRepository.manageLoginState(true)
+            manageLoginStateUseCase(true)
             sendEvent(LoginEvents.NavigateToHomeScreen)
         }
     }
