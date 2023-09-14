@@ -8,7 +8,6 @@ import javax.inject.Inject
 class ManageLoginStateUseCase @Inject constructor(
     private val authRepository: AuthRepository
 ) {
-
-    suspend operator fun invoke(isLogin: Boolean) = authRepository.manageLoginState(isLogin)
-
+    suspend fun setLoginState(isLogin: Boolean) = authRepository.manageLoginState(isLogin)
+    fun getLoginState() = authRepository.getLoginState()
 }

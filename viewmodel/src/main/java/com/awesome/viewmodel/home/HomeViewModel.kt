@@ -2,10 +2,11 @@ package com.awesome.viewmodel.home
 
 import android.util.Log
 import androidx.lifecycle.viewModelScope
-import com.awesome.entities.repos.AuthRepository
-import com.awesome.entities.repos.ChatRepository
-import com.awesome.entities.repos.ServiceRepository
 import com.awesome.entities.utils.UpdatedOrDeletedUserException
+import com.awesome.usecase.auth.ManageLoginStateUseCase
+import com.awesome.usecase.chat.GetAllChatsUseCase
+import com.awesome.usecase.service.ManageChatServerConnectionUseCase
+import com.awesome.usecase.service.GetConnectionStateUseCase
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -15,9 +16,10 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val authRepository: AuthRepository,
-    private val serviceRepository: ServiceRepository,
-    private val chatRepository: ChatRepository
+    private val manageLoginStateUseCase: ManageLoginStateUseCase,
+    private val getAllChatsUseCase: GetAllChatsUseCase,
+    private val getConnectionStateUseCase: GetConnectionStateUseCase,
+    private val manageChatServerConnectionUseCase: ManageChatServerConnectionUseCase
 ) : BaseViewModel<HomeUiState, HomeEvents>(HomeUiState()), HomeInteractions {
     init {
         isLoggedIn()
@@ -28,7 +30,7 @@ class HomeViewModel @Inject constructor(
 
     private fun getAllChats(){
         viewModelScope.launch {
-            chatRepository.getAllChats().collectLatest {chats->
+            getAllChatsUseCase().collectLatest {chats->
                 _state.update { it.copy(chats = chats.map { it.toState() } ) }
                 Log.e("TAG", "getAllChats: $chats", )
             }
@@ -36,7 +38,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun isLoggedIn() {
-        collectFlow(authRepository.getLoginState()) { loginState ->
+        collectFlow(manageLoginStateUseCase.getLoginState()) { loginState ->
             if (!loginState) {
                 sendEvent(HomeEvents.NavigateToLoginScreen)
             }
@@ -47,14 +49,14 @@ class HomeViewModel @Inject constructor(
     }
 
     private fun connectionState() {
-        collectFlow(serviceRepository.subscribeToConnectionState()) { connectionState ->
+        collectFlow(getConnectionStateUseCase()) { connectionState ->
             _state.update { it.copy(connectionState = connectionState) }
         }
     }
 
     private fun connectToChatServer() {
         tryToExecute(
-            call = serviceRepository::connectToChatServer,
+            call = manageChatServerConnectionUseCase::connectToChatServer,
             onSuccess = ::isSuccessNullReturn,
             onError = ::onConnectToChatError
         )
@@ -64,7 +66,7 @@ class HomeViewModel @Inject constructor(
         when (throwable) {
             is UpdatedOrDeletedUserException -> {
                 _state.update { it.copy(isSessionExpired = true) }
-                serviceRepository.disconnectFromChatServer()
+                manageChatServerConnectionUseCase.disconnectToChatServer()
             }
         }
     }
@@ -72,7 +74,7 @@ class HomeViewModel @Inject constructor(
     private fun isSuccessNullReturn(unit: Unit) {}
     override fun onSessionExpiredConfirm() {
         viewModelScope.launch {
-            authRepository.manageLoginState(false)
+            manageLoginStateUseCase.setLoginState(false)
         }
         sendEvent(HomeEvents.NavigateToLoginScreen)
     }

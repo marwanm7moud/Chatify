@@ -4,6 +4,7 @@ import android.util.Log
 import com.awesome.entities.User
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.SearchRepository
+import com.awesome.usecase.search.SearchUserByUsernameUseCase
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -11,14 +12,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchRepository: SearchRepository,
-    private val authRepository: AuthRepository
+    private val searchUserByUsernameUseCase: SearchUserByUsernameUseCase
 ) : BaseViewModel<SearchUiState, SearchEvents>(SearchUiState()), SearchInteractions {
 
 
-    private fun searchUserByLoginOrFullName(text: String){
+    private fun searchUserByLoginOrFullName(text: String) {
         tryToExecute(
-            call = { searchRepository.searchUserByLoginOrFullName(text) },
+            call = { searchUserByUsernameUseCase(text) },
             onSuccess = ::onSearchSuccess,
             onError = {}
         )
@@ -31,9 +31,11 @@ class SearchViewModel @Inject constructor(
 
 
     private fun onSearchSuccess(users: List<User>) {
-        _state.update { it.copy(
-            isLoading = false,
-            users = users.toUserUiState()) }
-        Log.e("TAG", "onSearchSuccess:$users ", )
+        _state.update {
+            it.copy(
+                isLoading = false,
+                users = users.toUserUiState()
+            )
+        }
     }
 }

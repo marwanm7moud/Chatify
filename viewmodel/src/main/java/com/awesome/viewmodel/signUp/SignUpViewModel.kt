@@ -85,7 +85,7 @@ class SignUpViewModel @Inject constructor(
     private fun onSignUpSuccess(user: User) {
         viewModelScope.launch{
             _state.update { it.copy(isLoading = false) }
-            manageLoginStateUseCase(true)
+            manageLoginStateUseCase.setLoginState(true)
             sendEvent(SignUpEvents.NavigateToHomeScreen)
         }
 

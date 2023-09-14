@@ -65,7 +65,7 @@ class LoginViewModel @Inject constructor(
     private fun onLoginSuccess(user: User) {
         viewModelScope.launch{
             _state.update { it.copy(isLoading = false) }
-            manageLoginStateUseCase(true)
+            manageLoginStateUseCase.setLoginState(true)
             sendEvent(LoginEvents.NavigateToHomeScreen)
         }
     }
