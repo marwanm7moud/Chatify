@@ -16,12 +16,6 @@ class AuthRepositoryImpl @Inject constructor(
     private val localDataSource: LocalDataSource
 ) : AuthRepository {
     override suspend fun signUp(userSignUpRequest: UserSignUpRequest): User {
-        Validator(
-            username = userSignUpRequest.username,
-            password = userSignUpRequest.password,
-            email = userSignUpRequest.email,
-            fullName = userSignUpRequest.fullName
-        )
         return remoteDataSource.signUp(userSignUpRequest).toUserEntity()
     }
 
