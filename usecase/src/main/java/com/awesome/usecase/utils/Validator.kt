@@ -1,4 +1,4 @@
-package com.awesome.repository.utils
+package com.awesome.usecase.utils
 
 import com.awesome.entities.utils.ValidationException
 

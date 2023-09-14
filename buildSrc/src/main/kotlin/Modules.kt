@@ -5,4 +5,5 @@ object Modules {
     const val LOCAL_MODULE = ":local"
     const val ENTITY_MODULE = ":entities"
     const val VIEW_MODEL_MODULE = ":viewmodel"
+    const val USECASES_MODULE = ":usecase"
 }

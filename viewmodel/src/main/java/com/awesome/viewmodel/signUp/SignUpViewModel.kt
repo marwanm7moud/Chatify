@@ -5,6 +5,8 @@ import com.awesome.entities.User
 import com.awesome.entities.repos.AuthRepository
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.entities.utils.ValidationException
+import com.awesome.usecase.auth.ManageLoginStateUseCase
+import com.awesome.usecase.auth.SignUpUseCase
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -13,7 +15,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val authRepository: AuthRepository
+    private val signUpUseCase: SignUpUseCase,
+    private val manageLoginStateUseCase: ManageLoginStateUseCase
 ) : BaseViewModel<SignUpUiState, SignUpEvents>(SignUpUiState()), SignUpInteractions {
     override fun onUsernameChange(username: String) {
         _state.update { it.copy(username = username , usernamePlaceHolder = null) }
@@ -40,7 +43,7 @@ class SignUpViewModel @Inject constructor(
             username = state.value.username,
         )
         tryToExecute(
-            call = { authRepository.signUp(userSignUpInfo) },
+            call = { signUpUseCase(userSignUpInfo) },
             onSuccess = ::onSignUpSuccess,
             onError = ::onSignUpError
         )
@@ -82,7 +85,7 @@ class SignUpViewModel @Inject constructor(
     private fun onSignUpSuccess(user: User) {
         viewModelScope.launch{
             _state.update { it.copy(isLoading = false) }
-            authRepository.manageLoginState(true)
+            manageLoginStateUseCase.setLoginState(true)
             sendEvent(SignUpEvents.NavigateToHomeScreen)
         }
 

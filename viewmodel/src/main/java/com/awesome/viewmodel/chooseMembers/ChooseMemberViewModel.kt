@@ -4,6 +4,8 @@ import android.util.Log
 import com.awesome.entities.User
 import com.awesome.entities.repos.ChatRepository
 import com.awesome.entities.repos.SearchRepository
+import com.awesome.usecase.chat.CreatePrivateChatUseCase
+import com.awesome.usecase.search.SearchUserByUsernameUseCase
 import com.awesome.viewmodel.BaseViewModel
 import com.awesome.viewmodel.search.UserUiState
 import com.awesome.viewmodel.search.toUserUiState
@@ -13,13 +15,13 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ChooseMemberViewModel @Inject constructor(
-    private val searchRepository: SearchRepository,
-    private val chatRepository: ChatRepository
+    private val searchUserByUsernameUseCase: SearchUserByUsernameUseCase,
+    private val createPrivateChatUseCase: CreatePrivateChatUseCase
 ) : BaseViewModel<ChooseMemberUiState , ChooseMemberEvents>(ChooseMemberUiState()) , ChooseMemberInteraction {
 
     private fun searchUserByLoginOrFullName(text: String){
         tryToExecute(
-            call = { searchRepository.searchUserByLoginOrFullName(text) },
+            call = { searchUserByUsernameUseCase(text) },
             onSuccess = ::onSearchSuccess,
             onError = {}
         )
@@ -41,7 +43,7 @@ class ChooseMemberViewModel @Inject constructor(
     }
     private fun createPrivateChat(){
         tryToExecute(
-            call = { chatRepository.createPrivateChat(state.value.selectedUser.id)},
+            call = { createPrivateChatUseCase(state.value.selectedUser.id)},
             onSuccess = {
                 sendEvent(ChooseMemberEvents.NavigateBackWithNewChat)
             },
