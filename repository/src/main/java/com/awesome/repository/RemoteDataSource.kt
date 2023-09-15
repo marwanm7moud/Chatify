@@ -1,7 +1,9 @@
 package com.awesome.repository
 
 import com.awesome.entities.Chat
+import com.awesome.entities.Message
 import com.awesome.entities.repos.model.UserSignUpRequest
+import com.awesome.repository.response.MessageDto
 import com.awesome.repository.response.UserDto
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
@@ -34,5 +36,8 @@ interface RemoteDataSource {
      fun getAllChats(): Flow<List<Chat>>
     suspend fun getUserImage(userAvatarId:Int): InputStream?
 
+    fun incomingMessagesListener() : Flow<MessageDto>
+    fun incomingSystemMessagesListener() : Flow<MessageDto>
 
+    fun sendSystemMessage(chatId:String , recipientId :Int)
 }

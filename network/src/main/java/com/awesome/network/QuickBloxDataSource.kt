@@ -4,11 +4,13 @@ import com.awesome.entities.Chat
 import com.awesome.entities.repos.model.UserSignUpRequest
 import com.awesome.network.auth.QuickBloxAuthService
 import com.awesome.network.chat.QuickBloxChatService
+import com.awesome.network.messaging.QuickBloxMessagingService
 import com.awesome.repository.RemoteDataSource
 import com.awesome.repository.response.UserDto
 import com.awesome.network.service.QuickBloxService
 import com.awesome.network.search.QuickBloxSearchService
 import com.awesome.network.utils.wrapApi
+import com.awesome.repository.response.MessageDto
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 import javax.inject.Inject
@@ -18,6 +20,7 @@ class QuickBloxDataSource @Inject constructor(
     private val qbService: QuickBloxService,
     private val searchService: QuickBloxSearchService,
     private val chatService: QuickBloxChatService,
+    private val messagingService: QuickBloxMessagingService,
 ) : RemoteDataSource {
     override suspend fun signUp(userSignUpRequest: UserSignUpRequest): UserDto {
         return wrapApi { authService.signUp(userSignUpRequest) }
@@ -73,5 +76,17 @@ class QuickBloxDataSource @Inject constructor(
 
     override suspend fun getUserImage(userAvatarId: Int): InputStream? {
         return wrapApi { authService.getUserImage(userAvatarId) }
+    }
+
+    override fun incomingMessagesListener(): Flow<MessageDto> {
+        return messagingService.incomingMessagesListener()
+    }
+
+    override fun incomingSystemMessagesListener(): Flow<MessageDto> {
+        return messagingService.incomingSystemMessagesListener()
+    }
+
+    override fun sendSystemMessage(chatId: String, recipientId: Int) {
+         messagingService.sendSystemMessage(chatId , recipientId)
     }
 }
