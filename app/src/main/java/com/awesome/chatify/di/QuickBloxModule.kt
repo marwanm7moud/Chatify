@@ -33,8 +33,5 @@ class QuickBloxModule {
     @Provides
     @Singleton
     fun provideQbChatRoster(qbChatService: QBChatService) : QBRoster = qbChatService.roster
-    @Provides
-    @Singleton
-    fun provideQbSystemMessaging(qbChatService: QBChatService) : QBSystemMessagesManager = QBChatService.getInstance().systemMessagesManager
 
 }

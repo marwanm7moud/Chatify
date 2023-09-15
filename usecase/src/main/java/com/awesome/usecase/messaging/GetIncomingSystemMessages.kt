@@ -8,5 +8,5 @@ import javax.inject.Inject
 class GetIncomingSystemMessages @Inject constructor(
     private val messagingRepository: MessagingRepository
 ) {
-    operator fun invoke(): Flow<Message> = messagingRepository.incomingMessagesListener()
+    operator fun invoke(): Flow<Message> = messagingRepository.incomingSystemMessagesListener()
 }
