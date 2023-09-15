@@ -8,6 +8,7 @@ import com.awesome.repository.RemoteDataSource
 import com.awesome.repository.response.UserDto
 import com.awesome.network.service.QuickBloxService
 import com.awesome.network.search.QuickBloxSearchService
+import com.awesome.network.utils.wrapApi
 import kotlinx.coroutines.flow.Flow
 import java.io.InputStream
 import javax.inject.Inject

@@ -3,7 +3,8 @@ package com.awesome.network.messaging
 import android.os.Bundle
 import android.util.Log
 import com.awesome.entities.Chat
-import com.awesome.network.toEntity
+import com.awesome.network.utils.getOccupantsIdsStringFromList
+import com.awesome.network.utils.toEntity
 import com.awesome.repository.response.MessageDto
 import com.quickblox.chat.QBChatService
 import com.quickblox.chat.QBIncomingMessagesManager
@@ -37,6 +38,7 @@ const val OCCUPANT_LEFT = "3"
 const val PROPERTY_NEW_OCCUPANTS_IDS = "new_occupants_ids"
 
 class QuickBloxMessagingServiceImpl @Inject constructor(
+    private val quickBloxService: QBChatService,
     private val systemMessagesManager: QBSystemMessagesManager,
     private val incomingMessagesManager: QBIncomingMessagesManager,
 ) : QuickBloxMessagingService {
@@ -76,5 +78,30 @@ class QuickBloxMessagingServiceImpl @Inject constructor(
         systemMessagesManager.addSystemMessageListener(systemMessagesListener)
     }
 
+    override fun sendSystemMessage(chatId: String, recipientId: Int) {
+        val chatMessage = QBChatMessage()
+        chatMessage.dialogId = chatId
+        chatMessage.recipientId = recipientId
+        chatMessage.setProperty("custom_property_1", "custom_value_1")
+        chatMessage.setProperty("custom_property_2", "custom_value_2")
+        chatMessage.setProperty("custom_property_3", "custom_value_3")
+        systemMessagesManager.sendSystemMessage(chatMessage)
+    }
 
+    private fun buildMessageCreatedGroupDialog(dialog: QBChatDialog): QBChatMessage {
+        val qbChatMessage = QBChatMessage()
+        qbChatMessage.dialogId = dialog.dialogId
+        qbChatMessage.setProperty(
+            PROPERTY_OCCUPANTS_IDS,
+            getOccupantsIdsStringFromList(dialog.occupants)
+        )
+        qbChatMessage.setProperty(PROPERTY_DIALOG_TYPE, dialog.type.code.toString())
+        qbChatMessage.setProperty(PROPERTY_DIALOG_NAME, dialog.name.toString())
+        qbChatMessage.setProperty(PROPERTY_NOTIFICATION_TYPE, CREATING_DIALOG)
+        qbChatMessage.dateSent = System.currentTimeMillis() / 1000
+        qbChatMessage.body = quickBloxService.user.fullName + "created the group chat" + dialog.name
+        qbChatMessage.setSaveToHistory(true)
+        qbChatMessage.isMarkable = true
+        return qbChatMessage
+    }
 }

@@ -1,7 +1,7 @@
 package com.awesome.network.search
 
 import android.os.Bundle
-import com.awesome.network.toEntity
+import com.awesome.network.utils.toEntity
 import com.awesome.repository.response.UserDto
 import com.quickblox.content.model.QBFile
 import com.quickblox.core.QBEntityCallback

@@ -1,4 +1,4 @@
-package com.awesome.network
+package com.awesome.network.utils
 
 import com.awesome.entities.Chat
 import com.awesome.entities.ChatType

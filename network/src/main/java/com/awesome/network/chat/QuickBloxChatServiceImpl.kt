@@ -2,7 +2,7 @@ package com.awesome.network.chat
 
 import android.os.Bundle
 import com.awesome.entities.Chat
-import com.awesome.network.toEntity
+import com.awesome.network.utils.toEntity
 import com.quickblox.chat.QBRestChatService
 import com.quickblox.chat.model.QBChatDialog
 import com.quickblox.chat.model.QBDialogType

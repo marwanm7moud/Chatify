@@ -7,4 +7,5 @@ interface QuickBloxMessagingService {
     fun incomingMessagesListener() : Flow<MessageDto>
     fun incomingSystemMessagesListener() : Flow<MessageDto>
 
+    fun sendSystemMessage(chatId:String , recipientId :Int)
 }
