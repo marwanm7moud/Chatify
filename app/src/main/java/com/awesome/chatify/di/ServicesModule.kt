@@ -6,6 +6,8 @@ import com.awesome.network.chat.QuickBloxChatService
 import com.awesome.network.chat.QuickBloxChatServiceImpl
 import com.awesome.network.contact.QuickBloxContactService
 import com.awesome.network.contact.QuickBloxContactServiceImpl
+import com.awesome.network.messaging.QuickBloxMessagingService
+import com.awesome.network.messaging.QuickBloxMessagingServiceImpl
 import com.awesome.network.service.QuickBloxService
 import com.awesome.network.service.QuickBloxServiceImpl
 import com.awesome.network.search.QuickBloxSearchService
@@ -32,4 +34,6 @@ abstract class ServicesModule {
     abstract fun provideChatService(quickBloxChatService: QuickBloxChatServiceImpl): QuickBloxChatService
     @Binds
     abstract fun provideContactService(quickBloxContactService: QuickBloxContactServiceImpl): QuickBloxContactService
+    @Binds
+    abstract fun provideMessagingService(quickBloxMessagingServiceImpl: QuickBloxMessagingServiceImpl): QuickBloxMessagingService
 }

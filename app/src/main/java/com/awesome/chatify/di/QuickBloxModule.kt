@@ -3,8 +3,11 @@ package com.awesome.chatify.di
 import com.quickblox.auth.session.QBSessionManager
 import com.quickblox.auth.session.QBSessionParameters
 import com.quickblox.chat.QBChatService
+import com.quickblox.chat.QBIncomingMessagesManager
 import com.quickblox.chat.QBRestChatService
 import com.quickblox.chat.QBRoster
+import com.quickblox.chat.QBSystemMessagesManager
+import com.quickblox.chat.listeners.QBSystemMessageListener
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -30,5 +33,11 @@ class QuickBloxModule {
     @Provides
     @Singleton
     fun provideQbChatRoster() : QBRoster = QBChatService.getInstance().roster
+    @Provides
+    @Singleton
+    fun provideQbSystemMessaging() : QBSystemMessagesManager = QBChatService.getInstance().systemMessagesManager
+    @Provides
+    @Singleton
+    fun provideQbIncomingMessagesManager() : QBIncomingMessagesManager = QBChatService.getInstance().incomingMessagesManager
 
 }

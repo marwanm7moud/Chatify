@@ -2,8 +2,10 @@ package com.awesome.network
 
 import com.awesome.entities.Chat
 import com.awesome.entities.ChatType
+import com.awesome.repository.response.MessageDto
 import com.awesome.repository.response.UserDto
 import com.quickblox.chat.model.QBChatDialog
+import com.quickblox.chat.model.QBChatMessage
 import com.quickblox.chat.model.QBDialogType
 import com.quickblox.users.model.QBUser
 
@@ -24,11 +26,11 @@ fun QBUser.toEntity() = UserDto(
 )
 
 @JvmName("listQBUserToEntity")
-fun List<QBUser>.toEntity() : List<UserDto> = this.map { it.toEntity() }
+fun List<QBUser>.toEntity(): List<UserDto> = this.map { it.toEntity() }
 
 @JvmName("dialogTypeToEntity")
-fun QBDialogType.toEntity() : ChatType{
-    return when(this){
+fun QBDialogType.toEntity(): ChatType {
+    return when (this) {
         QBDialogType.PUBLIC_GROUP -> ChatType.PUBLIC_GROUP
         QBDialogType.GROUP -> ChatType.GROUP
         QBDialogType.PRIVATE -> ChatType.PRIVATE
@@ -38,14 +40,26 @@ fun QBDialogType.toEntity() : ChatType{
 @JvmName("chatDialogToEntity")
 fun QBChatDialog.toEntity() = Chat(
     dialogId = dialogId,
-    name = name?: "",
+    name = name ?: "",
     Image = photo ?: "",
-    lastMessage = lastMessage?: "",
-    lastMessageDateSent = lastMessageDateSent?: 0,
-    unreadMessageCount = unreadMessageCount?: 0,
-    membersIds = occupants?: emptyList(),
+    lastMessage = lastMessage ?: "",
+    lastMessageDateSent = lastMessageDateSent ?: 0,
+    unreadMessageCount = unreadMessageCount ?: 0,
+    membersIds = occupants ?: emptyList(),
     type = type.toEntity()
 )
 
 @JvmName("listQBChatDialogToEntity")
-fun List<QBChatDialog>.toEntity() : List<Chat> = this.map { it.toEntity() }
+fun List<QBChatDialog>.toEntity(): List<Chat> = this.map { it.toEntity() }
+
+@JvmName("messageToEntity")
+fun QBChatMessage.toEntity() = MessageDto(
+    dialogId = dialogId,
+    sentAtTimeStamp = dateSent,
+    messageContent = body,
+    readMessageUsersId = readIds.toList(),
+    deliveredMessageUsersId = deliveredIds.toList(),
+    senderId = senderId,
+    isMarkable = isMarkable,
+    isDelayed = isDelayed,
+)
