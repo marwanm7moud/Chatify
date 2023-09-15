@@ -1,30 +1,15 @@
 package com.awesome.network.messaging
 
-import android.os.Bundle
 import android.util.Log
-import com.awesome.entities.Chat
-import com.awesome.network.utils.Constants.CREATING_DIALOG
-import com.awesome.network.utils.Constants.PROPERTY_DIALOG_NAME
-import com.awesome.network.utils.Constants.PROPERTY_DIALOG_TYPE
-import com.awesome.network.utils.Constants.PROPERTY_NOTIFICATION_TYPE
-import com.awesome.network.utils.Constants.PROPERTY_OCCUPANTS_IDS
-import com.awesome.network.utils.getOccupantsIdsStringFromList
 import com.awesome.network.utils.toEntity
 import com.awesome.repository.response.MessageDto
 import com.quickblox.chat.QBChatService
 import com.quickblox.chat.QBIncomingMessagesManager
-import com.quickblox.chat.QBRestChatService
 import com.quickblox.chat.QBSystemMessagesManager
 import com.quickblox.chat.exception.QBChatException
 import com.quickblox.chat.listeners.QBChatDialogMessageListener
 import com.quickblox.chat.listeners.QBSystemMessageListener
-import com.quickblox.chat.model.QBChatDialog
 import com.quickblox.chat.model.QBChatMessage
-import com.quickblox.chat.model.QBDialogType
-import com.quickblox.chat.utils.DialogUtils
-import com.quickblox.core.QBEntityCallback
-import com.quickblox.core.exception.QBResponseException
-import com.quickblox.core.request.QBRequestGetBuilder
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
@@ -32,14 +17,16 @@ import javax.inject.Inject
 
 
 class QuickBloxMessagingServiceImpl @Inject constructor(
-    private val systemMessagesManager: QBSystemMessagesManager,
-    private val incomingMessagesManager: QBIncomingMessagesManager,
+    private val qbChatService: QBChatService,
 ) : QuickBloxMessagingService {
 
     private lateinit var systemMessagesListener: QBSystemMessageListener
-
+    private lateinit var systemMessagesManager: QBSystemMessagesManager
     override fun incomingMessagesListener(): Flow<MessageDto> = callbackFlow {
-        incomingMessagesManager.addDialogMessageListener(object : QBChatDialogMessageListener {
+        val incomingMessagesManager: QBIncomingMessagesManager =
+            qbChatService.incomingMessagesManager
+
+        val listener = object : QBChatDialogMessageListener {
             override fun processMessage(
                 dialogId: String?,
                 chatMessage: QBChatMessage?,
@@ -56,25 +43,41 @@ class QuickBloxMessagingServiceImpl @Inject constructor(
                 p3: Int?
             ) {
             }
-        })
+        }
 
+        incomingMessagesManager.addDialogMessageListener(listener)
+        awaitClose { incomingMessagesManager.removeDialogMessageListrener(listener) }
     }
 
     override fun incomingSystemMessagesListener(): Flow<MessageDto> = callbackFlow {
-        systemMessagesListener = object : QBSystemMessageListener {
-            override fun processMessage(chatMessage: QBChatMessage) {
-                trySend(chatMessage.toEntity())
-            }
+        try{
+            systemMessagesListener = object : QBSystemMessageListener {
+                override fun processMessage(chatMessage: QBChatMessage) {
+                    Log.e("TAG", "processMessage: $chatMessage")
+                    trySend(chatMessage.toEntity())
+                }
 
-            override fun processError(exception: QBChatException, chatMessage: QBChatMessage) {}
+                override fun processError(exception: QBChatException, chatMessage: QBChatMessage) {
+                    Log.e("TAG", "error: $chatMessage")
+                }
+            }
+            systemMessagesManager = qbChatService.systemMessagesManager
+            systemMessagesManager.addSystemMessageListener(systemMessagesListener)
+        }catch (e:Exception){
+            Log.e("TAG", "error: gg")
+            qbChatService.login(qbChatService.user)
         }
-        systemMessagesManager.addSystemMessageListener(systemMessagesListener)
+        awaitClose { systemMessagesManager.removeSystemMessageListener(systemMessagesListener) }
     }
 
     override fun sendSystemMessage(chatId: String, recipientId: Int) {
         val chatMessage = QBChatMessage()
         chatMessage.dialogId = chatId
         chatMessage.recipientId = recipientId
-        systemMessagesManager.sendSystemMessage(chatMessage)
+        try {
+            systemMessagesManager.sendSystemMessage(chatMessage)
+        }catch (e:Exception){
+            Log.d("TAG", "Sending System Message Error: " + e.message)
+        }
     }
 }
