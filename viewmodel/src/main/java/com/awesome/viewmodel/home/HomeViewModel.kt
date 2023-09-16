@@ -5,10 +5,12 @@ import androidx.lifecycle.viewModelScope
 import com.awesome.entities.utils.UpdatedOrDeletedUserException
 import com.awesome.usecase.auth.ManageLoginStateUseCase
 import com.awesome.usecase.chat.GetAllChatsUseCase
+import com.awesome.usecase.messaging.GetIncomingSystemMessages
 import com.awesome.usecase.service.ManageChatServerConnectionUseCase
 import com.awesome.usecase.service.GetConnectionStateUseCase
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -19,20 +21,26 @@ class HomeViewModel @Inject constructor(
     private val manageLoginStateUseCase: ManageLoginStateUseCase,
     private val getAllChatsUseCase: GetAllChatsUseCase,
     private val getConnectionStateUseCase: GetConnectionStateUseCase,
-    private val manageChatServerConnectionUseCase: ManageChatServerConnectionUseCase
+    private val manageChatServerConnectionUseCase: ManageChatServerConnectionUseCase,
+    private val getIncomingSystemMessages: GetIncomingSystemMessages
 ) : BaseViewModel<HomeUiState, HomeEvents>(HomeUiState()), HomeInteractions {
     init {
         isLoggedIn()
         connectToChatServer()
         connectionState()
         getAllChats()
+        viewModelScope.launch {
+            getIncomingSystemMessages().collectLatest {
+                Log.e("TAG", it.messageContent )
+                getAllChats()
+            }
+        }
     }
 
     private fun getAllChats(){
         viewModelScope.launch {
             getAllChatsUseCase().collectLatest {chats->
                 _state.update { it.copy(chats = chats.map { it.toState() } ) }
-                Log.e("TAG", "getAllChats: $chats", )
             }
         }
     }

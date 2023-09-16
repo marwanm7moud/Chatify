@@ -7,5 +7,5 @@ interface MessagingRepository {
     fun incomingMessagesListener() : Flow<Message>
     fun incomingSystemMessagesListener() : Flow<Message>
 
-    fun sendSystemMessage(chatId:String , recipientId :Int)
+    fun sendSystemMessage(recipientId :Int)
 }

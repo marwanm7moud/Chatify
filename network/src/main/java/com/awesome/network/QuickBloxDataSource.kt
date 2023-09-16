@@ -86,7 +86,7 @@ class QuickBloxDataSource @Inject constructor(
         return messagingService.incomingSystemMessagesListener()
     }
 
-    override fun sendSystemMessage(chatId: String, recipientId: Int) {
-         messagingService.sendSystemMessage(chatId , recipientId)
+    override fun sendSystemMessage(recipientId: Int) {
+         messagingService.sendSystemMessage(recipientId)
     }
 }

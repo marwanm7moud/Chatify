@@ -39,5 +39,5 @@ interface RemoteDataSource {
     fun incomingMessagesListener() : Flow<MessageDto>
     fun incomingSystemMessagesListener() : Flow<MessageDto>
 
-    fun sendSystemMessage(chatId:String , recipientId :Int)
+    fun sendSystemMessage(recipientId :Int)
 }

@@ -21,7 +21,7 @@ class MessagingRepositoryImpl @Inject constructor(
         return remoteDataSource.incomingSystemMessagesListener().map { it.toEntity() }
     }
 
-    override fun sendSystemMessage(chatId: String, recipientId: Int) {
-        remoteDataSource.sendSystemMessage(chatId, recipientId)
+    override fun sendSystemMessage(recipientId: Int) {
+        remoteDataSource.sendSystemMessage(recipientId)
     }
 }

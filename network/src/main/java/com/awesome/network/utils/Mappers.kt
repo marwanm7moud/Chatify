@@ -54,12 +54,12 @@ fun List<QBChatDialog>.toEntity(): List<Chat> = this.map { it.toEntity() }
 
 @JvmName("messageToEntity")
 fun QBChatMessage.toEntity() = MessageDto(
-    dialogId = dialogId,
+    dialogId = dialogId ?: "",
     sentAtTimeStamp = dateSent,
-    messageContent = body,
+    messageContent = body ?: "",
     readMessageUsersId = readIds.toList(),
     deliveredMessageUsersId = deliveredIds.toList(),
-    senderId = senderId,
+    senderId = senderId ?: 0,
     isMarkable = isMarkable,
     isDelayed = isDelayed,
 )

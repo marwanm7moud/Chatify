@@ -8,5 +8,5 @@ import javax.inject.Inject
 class SendSystemMessage @Inject constructor(
     private val messagingRepository: MessagingRepository
 ) {
-    operator fun invoke(chatId:String , recipientId :Int) = messagingRepository.sendSystemMessage(chatId , recipientId)
+    operator fun invoke(recipientId :Int) = messagingRepository.sendSystemMessage(recipientId)
 }

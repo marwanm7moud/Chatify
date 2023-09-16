@@ -72,10 +72,9 @@ class QuickBloxMessagingServiceImpl @Inject constructor(
     }
 
 
-    override fun sendSystemMessage(chatId: String, recipientId: Int) {
+    override fun sendSystemMessage(recipientId: Int) {
         val systemMessagesManager = QBChatService.getInstance().systemMessagesManager
         val chatMessage = QBChatMessage()
-        chatMessage.dialogId = chatId
         chatMessage.recipientId = recipientId
         chatMessage.setSaveToHistory(false)
         chatMessage.isMarkable = false
