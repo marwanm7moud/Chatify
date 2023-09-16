@@ -25,19 +25,22 @@ interface RemoteDataSource {
     suspend fun connectToChatServer()
     fun subscribeToConnectionState(): Flow<String>
     fun disconnectFromChatServer()
-   suspend fun searchUserByLoginOrFullName(searchValue:String) : List<UserDto>
+    suspend fun searchUserByFullName(searchValue: String): List<UserDto>
+    suspend fun loadUsersWithoutQuery(): List<UserDto>
 
-    suspend fun createPrivateChat(secondUserId:Int)
+
+    suspend fun createPrivateChat(secondUserId: Int)
     suspend fun createGroupChat(
-        chatName:String,
-        chatPhoto:String?,
-        membersId:ArrayList<Int>,
+        chatName: String,
+        chatPhoto: String?,
+        membersId: ArrayList<Int>,
     )
-     fun getAllChats(): Flow<List<Chat>>
-    suspend fun getUserImage(userAvatarId:Int): InputStream?
 
-    fun incomingMessagesListener() : Flow<MessageDto>
-    fun incomingSystemMessagesListener() : Flow<MessageDto>
+    fun getAllChats(): Flow<List<Chat>>
+    suspend fun getUserImage(userAvatarId: Int): InputStream?
 
-    fun sendSystemMessage(recipientId :Int)
+    fun incomingMessagesListener(): Flow<MessageDto>
+    fun incomingSystemMessagesListener(): Flow<MessageDto>
+
+    fun sendSystemMessage(recipientId: Int)
 }

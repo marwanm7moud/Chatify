@@ -32,4 +32,21 @@ class QuickBloxSearchServiceImpl @Inject constructor() : QuickBloxSearchService 
                     }
                 })
         }
+
+    override suspend fun loadUsersWithoutQuery(): List<UserDto> = suspendCoroutine { cont ->
+        val requestBuilder = QBPagedRequestBuilder()
+        requestBuilder.rules.add(
+            GenericQueryRule("order", "desc string updated_at")
+        )
+        QBUsers.getUsers(requestBuilder)
+            .performAsync(object : QBEntityCallback<ArrayList<QBUser>> {
+                override fun onSuccess(usersList: ArrayList<QBUser>, bundle: Bundle) {
+                    cont.resume(usersList.toEntity())
+                }
+
+                override fun onError(exception: QBResponseException) {
+                    cont.resumeWithException(exception)
+                }
+            })
+    }
 }

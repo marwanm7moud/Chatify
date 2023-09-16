@@ -9,7 +9,11 @@ import javax.inject.Inject
 class SearchRepositoryImpl @Inject constructor(
     private val remoteDataSource: RemoteDataSource,
 ) : SearchRepository {
-    override suspend fun searchUserByLoginOrFullName(searchValue: String): List<User> {
-        return remoteDataSource.searchUserByLoginOrFullName(searchValue).toEntity()
+    override suspend fun searchUserByFullName(searchValue: String): List<User> {
+        return remoteDataSource.searchUserByFullName(searchValue).toEntity()
+    }
+
+    override suspend fun loadUsersWithoutQuery(): List<User> {
+        return remoteDataSource.loadUsersWithoutQuery().toEntity()
     }
 }

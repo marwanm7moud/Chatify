@@ -1,10 +1,8 @@
 package com.awesome.viewmodel.search
 
-import android.util.Log
 import com.awesome.entities.User
-import com.awesome.entities.repos.AuthRepository
-import com.awesome.entities.repos.SearchRepository
-import com.awesome.usecase.search.SearchUserByUsernameUseCase
+import com.awesome.usecase.search.LoadUsersWithoutQueryUseCase
+import com.awesome.usecase.search.SearchUserByFullNameUseCase
 import com.awesome.viewmodel.BaseViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.update
@@ -12,16 +10,24 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SearchViewModel @Inject constructor(
-    private val searchUserByUsernameUseCase: SearchUserByUsernameUseCase
+    private val searchUserByFullnameUseCase: SearchUserByFullNameUseCase,
+    private val loadUsersWithoutQueryUseCase: LoadUsersWithoutQueryUseCase,
 ) : BaseViewModel<SearchUiState, SearchEvents>(SearchUiState()), SearchInteractions {
 
+    init {
+        loadUsersWithoutQuery()
+    }
+
+    private fun loadUsersWithoutQuery() {
+        tryToExecute(call = { loadUsersWithoutQueryUseCase() },
+            onSuccess = ::onSuccess,
+            onError = {})
+    }
 
     private fun searchUserByLoginOrFullName(text: String) {
-        tryToExecute(
-            call = { searchUserByUsernameUseCase(text) },
-            onSuccess = ::onSearchSuccess,
-            onError = {}
-        )
+        tryToExecute(call = { searchUserByFullnameUseCase(text) },
+            onSuccess = ::onSuccess,
+            onError = {})
     }
 
     override fun onSearchInputChanged(text: String) {
@@ -30,11 +36,10 @@ class SearchViewModel @Inject constructor(
     }
 
 
-    private fun onSearchSuccess(users: List<User>) {
+    private fun onSuccess(users: List<User>) {
         _state.update {
             it.copy(
-                isLoading = false,
-                users = users.toUserUiState()
+                isLoading = false, users = users.toUserUiState()
             )
         }
     }
