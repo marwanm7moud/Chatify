@@ -55,7 +55,7 @@ class QuickBloxDataSource @Inject constructor(
     }
 
     override suspend fun searchUserByLoginOrFullName(searchValue: String): List<UserDto> {
-        return searchService.searchUserByLoginOrFullName(searchValue)
+        return searchService.searchUserByFullName(searchValue)
     }
 
     override suspend fun createPrivateChat(secondUserId: Int) {
